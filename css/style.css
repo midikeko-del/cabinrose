@@ -147,6 +147,16 @@ a:hover { text-decoration: underline; text-underline-offset: 3px; }
   padding-bottom: .15em; /* ruang untuk ekor huruf skrip, elak terpotong */
   margin-bottom: .15em;
 }
+.rose-icon {
+  display: inline-block;
+  width: .62em;
+  height: .62em;
+  margin-right: .18em;
+  vertical-align: baseline;
+  background: currentColor; /* ikut warna teks - sesuai light & dark mode */
+  -webkit-mask: url("../img/rose.svg") center / contain no-repeat;
+  mask: url("../img/rose.svg") center / contain no-repeat;
+}
 .hero-copy .eyebrow {
   font-size: .78rem;
   font-weight: 600;
