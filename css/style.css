@@ -370,6 +370,7 @@ a:hover { text-decoration: underline; text-underline-offset: 3px; }
 .ambience::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, var(--scrim) 0%, rgb(10 10 10 / .3) 100%); }
 .ambience-copy { padding-block: 4rem; width: 100%; }
 .ambience-copy h2, .ambience-copy p { color: #fff; max-width: 30rem; }
+.ambience-copy h2 em { font-style: italic; padding-inline: 0.08em; }
 .ambience-copy p { color: rgb(255 255 255 / .85); font-size: 1.08rem; margin: 0; }
 
 /* ---------- Majlis & Event (blok kontras tunggal) ---------- */
