@@ -518,9 +518,11 @@ a:hover { text-decoration: underline; text-underline-offset: 3px; }
 .admin-link {
   font-size: 0.78rem;
   color: var(--muted);
-  opacity: 0.5;
+  opacity: 0.6;
   transition: opacity 0.2s ease, color 0.2s ease;
   text-decoration: none;
+  padding: 12px 16px; /* Besarkan kawasan sentuhan (touch target) untuk jari telefon pintar */
+  margin: -12px -16px; /* Imbang semula margin agar tidak mengganggu kedudukan copyright */
 }
 .admin-link:hover {
   opacity: 1;
