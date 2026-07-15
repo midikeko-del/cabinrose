@@ -125,7 +125,7 @@
 
   var saved = null;
   try { saved = localStorage.getItem(LANG_KEY); } catch (e) { /* abaikan */ }
-  if (saved === "en") applyLang("en");
+  applyLang(saved === "ms" ? "ms" : "en"); // default paparan: English, kecuali pengguna pilih BM
 
   if (toggle) {
     toggle.addEventListener("click", function () {
