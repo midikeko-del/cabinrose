@@ -1,242 +1,160 @@
 <!doctype html>
-<html lang="en">
+<html lang="ms">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cabin Rose Station | Cafe &amp; Western Food Terbaik di Kemaman</title>
-<meta name="description" content="Mencari western food terbaik di Kemaman? Nikmati cheesy corndog, buttermilk chicken, kopi premium &amp; dessert di Cabin Rose Station River Front. Suasana cafe aesthetic &amp; sesuai lepak!">
-<meta property="og:title" content="Cabin Rose Station | Cafe &amp; Western Food Terbaik di Kemaman">
-<meta property="og:description" content="Mencari western food terbaik di Kemaman? Nikmati cheesy corndog, buttermilk chicken, kopi premium &amp; dessert di Cabin Rose Station River Front.">
-<meta property="og:type" content="website">
+<title>Cabin Rose Station | Penyelenggaraan Laman Web</title>
 <link rel="icon" href="img/logo.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
-<link rel="stylesheet" href="css/style.css">
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Restaurant",
-  "name": "Cabin Rose Station",
-  "servesCuisine": ["Western", "Cafe"],
-  "foundingDate": "2019",
-  "priceRange": "$$",
-  "telephone": "+60139642739",
-  "address": {
-    "@type": "PostalAddress",
-    "streetAddress": "L-94-G, Jalan Raja Udang 3, River Front Business Centre",
-    "addressLocality": "Kemaman",
-    "postalCode": "24000",
-    "addressRegion": "Terengganu",
-    "addressCountry": "MY"
-  },
-  "openingHoursSpecification": [
-    { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Saturday","Sunday","Monday","Tuesday","Wednesday","Thursday"], "opens": "11:00", "closes": "23:00" },
-    { "@type": "OpeningHoursSpecification", "dayOfWeek": "Friday", "opens": "15:00", "closes": "23:00" }
-  ],
-  "sameAs": [
-    "https://www.instagram.com/cabinrose_/",
-    "https://www.facebook.com/p/Cabin-Rose-Station-100063535780627/"
-  ]
-}
-</script>
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --accent: #b07d7d; /* Dusty Rose */
+    --text: #ffffff;
+    --text-muted: rgba(255, 255, 255, 0.7);
+    --card-bg: rgba(25, 25, 25, 0.65);
+    --border: rgba(255, 255, 255, 0.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: linear-gradient(135deg, rgba(10, 10, 10, 0.9), rgba(20, 20, 20, 0.95)), url('img/interior.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--text);
+    padding: 20px;
+    overflow: hidden;
+  }
+  .maintenance-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 3rem 2rem;
+    max-width: 480px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    animation: fadeIn 0.8s ease forwards;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .logo-container {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 1.5rem;
+  }
+  .logo-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 2px solid var(--accent);
+    object-fit: cover;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+  }
+  .brand {
+    font-size: 1.8rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 0.5rem;
+  }
+  .brand span {
+    font-family: 'Kaushan Script', cursive;
+    color: var(--accent);
+    font-weight: 400;
+  }
+  .tag {
+    display: inline-block;
+    background: rgba(176, 125, 125, 0.15);
+    color: var(--accent);
+    border: 1px solid rgba(176, 125, 125, 0.25);
+    padding: 0.35rem 1rem;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 1.5rem;
+  }
+  .description {
+    font-size: 0.98rem;
+    line-height: 1.6;
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+  }
+  .buttons-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+  .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0.85rem 1.5rem;
+    border-radius: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+  }
+  .btn-primary:hover {
+    background: #9d6868;
+    transform: translateY(-2px);
+  }
+  .btn-secondary {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+  }
+  .footer-text {
+    margin-top: 2rem;
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.35);
+  }
+</style>
 </head>
 <body>
-
-<header class="site-head" id="top">
-  <div class="container head-in">
-    <a class="brand" href="#top"><img class="logo-img" src="img/logo.jpg" alt="Logo Cabin Rose Station" width="320" height="320">Cabin <span>Rose</span> Station</a>
-    <nav class="nav" id="nav">
-      <a href="#menu" data-i18n="nav.menu">Menu</a>
-      <a href="#suasana" data-i18n="nav.ambience">Suasana</a>
-      <a href="#ulasan" data-i18n="nav.reviews">Ulasan</a>
-      <a href="#lokasi" data-i18n="nav.location">Lokasi</a>
-    </nav>
-    <div class="head-actions">
-      <button class="lang-toggle" id="langToggle" aria-label="Tukar bahasa / Switch language">EN</button>
-      <a class="btn btn-primary btn-sm" href="https://wa.me/60139642739?text=Hai%20Cabin%20Rose%20Station%2C%20saya%20nak%20tempah%20meja." target="_blank" rel="noopener">
-        <i class="ph ph-whatsapp-logo" aria-hidden="true"></i><span data-i18n="hero.cta1">Tempah di WhatsApp</span>
+  <div class="maintenance-card">
+    <div class="logo-container">
+      <img class="logo-img" src="img/logo.jpg" alt="Logo Cabin Rose Station">
+    </div>
+    <h1 class="brand">Cabin <span>Rose</span> Station</h1>
+    <div class="tag">Penyelenggaraan Laman Web</div>
+    <p class="description">Kami sedang mengemas kini laman web kami untuk memberikan paparan yang lebih menyelerakan dan interaktif kepada anda. Kami akan kembali menemui anda tidak lama lagi!</p>
+    
+    <div class="buttons-group">
+      <a href="https://wa.me/60139642739?text=Hai%20Cabin%20Rose%20Station!" class="btn btn-primary" target="_blank" rel="noopener">
+        <i class="ph ph-whatsapp-logo"></i> Hubungi Kami di WhatsApp
       </a>
-      <button class="nav-burger" id="navBurger" aria-label="Buka menu navigasi" aria-expanded="false"><i class="ph ph-list" aria-hidden="true"></i></button>
+      <a href="https://www.instagram.com/cabinrose_/" class="btn btn-secondary" target="_blank" rel="noopener">
+        <i class="ph ph-instagram-logo"></i> Ikuti Kami di Instagram
+      </a>
     </div>
+    
+    <p class="footer-text">&copy; 2026 Cabin Rose Station. Hak cipta terpelihara.</p>
   </div>
-</header>
-
-<main>
-
-  <!-- HERO : Latar belakang penuh gambar makanan HD -->
-  <section class="hero">
-    <div class="container">
-      <div class="hero-copy">
-        <p class="eyebrow" data-i18n="hero.eyebrow">River Front, Kemaman</p>
-        <h1><span data-i18n="hero.title">Cabin Rose Station</span><span class="rose-icon" aria-hidden="true"></span></h1>
-        <p class="lede" data-i18n="hero.sub">Corndog panas, nasi buttermilk dan western klasik di tepi Sungai Kemaman. Buka setiap hari sampai 11 malam.</p>
-        <div class="cta-row">
-          <a class="btn btn-primary" href="https://wa.me/60139642739?text=Hai%20Cabin%20Rose%20Station%2C%20saya%20nak%20tempah%20meja." target="_blank" rel="noopener">
-            <i class="ph ph-whatsapp-logo" aria-hidden="true"></i><span data-i18n="hero.cta1">Tempah di WhatsApp</span>
-          </a>
-          <a class="btn btn-ghost" href="#menu" data-i18n="hero.cta2">Lihat Menu</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- BAR INFO : waktu operasi ringkas (maklumat berfungsi) -->
-  <div class="info-bar">
-    <div class="container info-in">
-      <span><i class="ph ph-clock" aria-hidden="true"></i><span data-i18n="bar.daily">Buka setiap hari</span>&nbsp;<strong data-i18n="bar.dailyHours">11:00 pagi - 11:00 malam</strong></span>
-      <span class="info-sep" aria-hidden="true"></span>
-      <span><span data-i18n="bar.fri">Jumaat</span>&nbsp;<strong data-i18n="bar.friHours">3:00 petang - 11:00 malam</strong></span>
-      <span class="info-sep" aria-hidden="true"></span>
-      <a href="tel:+60139642739"><i class="ph ph-phone" aria-hidden="true"></i><span data-i18n="bar.call">013-964 2739</span></a>
-    </div>
-  </div>
-
-  <!-- MENU : bento grid 4 sel -->
-  <section class="section" id="menu">
-    <div class="container">
-      <h2 class="reveal" data-i18n="menu.title">Yang wajib cuba</h2>
-      <div class="bento">
-        <!-- Sel utama : panel jenama (TODO: boleh ganti dengan foto corndog sebenar sebagai latar) -->
-        <article class="cell cell-feature reveal">
-          <p class="cell-tag" data-i18n="menu.i1.tag">Paling laris</p>
-          <h3 data-i18n="menu.i1.name">Corndog Signature</h3>
-          <p data-i18n="menu.i1.desc">Rangup di luar, cheese melt di dalam. Sebab utama orang datang semula.</p>
-        </article>
-        <article class="cell reveal">
-          <img src="img/buttermilk.jpg" alt="Buttermilk Chicken Rice Cabin Rose Station" loading="lazy" width="640" height="480">
-          <div class="cell-body">
-            <h3 data-i18n="menu.i2.name">Nasi Buttermilk</h3>
-            <p data-i18n="menu.i2.desc">Ayam crispy bersalut sos buttermilk yang lemak dan manis.</p>
-          </div>
-        </article>
-        <article class="cell reveal">
-          <img src="img/chicken_chop.jpg" alt="Chicken Chop &amp; Grill Cabin Rose Station" loading="lazy" width="640" height="480">
-          <div class="cell-body">
-            <h3 data-i18n="menu.i3.name">Chicken Chop &amp; Grill</h3>
-            <p data-i18n="menu.i3.desc">Western klasik, dimasak segar dengan sos homemade.</p>
-          </div>
-        </article>
-        <article class="cell cell-wide reveal">
-          <img src="img/drinks.jpg" alt="Minuman ais berjenama Cabin Rose Station di atas meja" loading="lazy" width="378" height="504">
-          <div class="cell-body">
-            <h3 data-i18n="menu.i4.name">Kopi &amp; Dessert</h3>
-            <p data-i18n="menu.i4.desc">Kopi pekat dan pencuci mulut untuk sesi lepak petang.</p>
-          </div>
-        </article>
-      </div>
-      <div class="menu-actions reveal">
-        <a class="btn btn-ghost" href="menu.pdf" target="_blank" rel="noopener">
-          <i class="ph ph-file-pdf" aria-hidden="true"></i><span data-i18n="menu.pdfBtn">Muat Turun Menu PDF</span>
-        </a>
-      </div>
-      <p class="menu-note reveal"><span data-i18n="menu.note">Menu penuh dan promosi terkini ada di Instagram kami.</span>
-        <a href="https://www.instagram.com/cabinrose_/" target="_blank" rel="noopener" data-i18n="menu.igLink">Ikuti @cabinrose_</a>
-      </p>
-    </div>
-  </section>
-
-  <!-- SUASANA : full-bleed imej + teks atas scrim -->
-  <section class="ambience" id="suasana">
-    <img class="ambience-bg" src="img/interior.jpg" alt="" loading="lazy" width="928" height="1280" style="object-position: 50% 90%">
-    <div class="container ambience-copy">
-      <h2 class="reveal" data-i18n="amb.title">Datang sebab lapar,  <em>stay</em>  sebab best.</h2>
-      <p class="reveal" data-i18n="amb.body">Lepak dengan keluarga, pasangan atau satu geng. Ambil kunci anda dan klik peta di bawah.</p>
-    </div>
-  </section>
-
-  <!-- MAJLIS & EVENT : blok kontras tunggal -->
-  <section class="event" id="event">
-    <div class="container event-grid">
-      <div>
-        <h2 class="reveal" data-i18n="ev.title">Nak sambut birthday atau buat majlis?</h2>
-        <p class="reveal" data-i18n="ev.body">Jamuan, birthday party, majlis rasmi dan buffet. Bagitahu tarikh, kami siapkan tempat dan makanan.</p>
-        <a class="btn btn-primary" href="https://wa.me/60139642739?text=Hai%20Cabin%20Rose%20Station%2C%20saya%20nak%20tempah%20meja." target="_blank" rel="noopener">
-          <i class="ph ph-whatsapp-logo" aria-hidden="true"></i><span data-i18n="hero.cta1">Tempah di WhatsApp</span>
-        </a>
-      </div>
-      <div class="event-media reveal">
-        <img src="img/event.jpg" alt="Susunan meja banquet untuk majlis di Cabin Rose Station" loading="lazy" width="1080" height="1080">
-      </div>
-    </div>
-  </section>
-
-  <!-- ULASAN : quote utama + 2 quote kecil -->
-  <section class="section" id="ulasan">
-    <div class="container">
-      <h2 class="reveal" data-i18n="rev.title">Kata pengunjung</h2>
-      <div class="quotes">
-        <figure class="quote quote-lead reveal">
-          <blockquote data-i18n="rev.q1.text">&ldquo;Deko simple, minimalis dan aesthetic. Harga berpatutan, rasa memang sedap.&rdquo;</blockquote>
-          <figcaption><span data-i18n="rev.q1.who">Ulasan pengunjung</span> <em data-i18n="rev.q1.src">di Google</em></figcaption>
-        </figure>
-        <div class="quote-stack">
-          <figure class="quote reveal">
-            <blockquote data-i18n="rev.q2.text">&ldquo;Corndog dia memang sedap. Wajib cuba kalau singgah Kemaman.&rdquo;</blockquote>
-            <figcaption><span data-i18n="rev.q2.who">Ulasan pengunjung</span> <em data-i18n="rev.q2.src">di TikTok</em></figcaption>
-          </figure>
-          <figure class="quote reveal">
-            <blockquote data-i18n="rev.q3.text">&ldquo;Tempat yang sesuai untuk keluarga, pasangan dan kawan-kawan.&rdquo;</blockquote>
-            <figcaption><span data-i18n="rev.q3.who">Ulasan pengunjung</span> <em data-i18n="rev.q3.src">di Facebook</em></figcaption>
-          </figure>
-        </div>
-        <figure class="quote-media reveal">
-          <img src="img/signage.jpg" alt="Papan tanda Cabin Rose Station di laman kafe" loading="lazy" width="1015" height="1280">
-        </figure>
-      </div>
-      <p class="menu-note reveal"><a href="https://www.google.com/maps/search/?api=1&amp;query=Cabin+Rose+Station+Kemaman" target="_blank" rel="noopener" data-i18n="rev.more">Baca lagi ulasan di Google Maps</a></p>
-    </div>
-  </section>
-
-  <!-- LOKASI : peta penuh + kad info -->
-  <section class="location" id="lokasi">
-    <div class="map-container">
-      <iframe class="map" src="https://maps.google.com/maps?q=Cabin%20Rose%20Station%20Kemaman&amp;z=16&amp;output=embed" title="Peta lokasi Cabin Rose Station" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade"></iframe>
-      <div class="map-overlay" id="mapOverlay">
-        <i class="ph ph-hand-pointing" aria-hidden="true"></i>
-        <span data-i18n="loc.mapClick">Sentuh untuk interaksi peta</span>
-      </div>
-    </div>
-    <div class="container">
-      <div class="loc-card">
-        <h2 data-i18n="loc.title">Cari kami</h2>
-        <p class="loc-addr"><i class="ph ph-map-pin" aria-hidden="true"></i>L-94-G, Jalan Raja Udang 3, River Front Business Centre, 24000 Kemaman, Terengganu</p>
-        <dl class="loc-hours">
-          <div><dt data-i18n="loc.day1">Sabtu - Khamis</dt><dd data-i18n="loc.time1">11:00 pagi - 11:00 malam</dd></div>
-          <div><dt data-i18n="loc.day2">Jumaat</dt><dd data-i18n="loc.time2">3:00 petang - 11:00 malam</dd></div>
-        </dl>
-        <p class="loc-phone"><i class="ph ph-phone" aria-hidden="true"></i><a href="tel:+60139642739">013-964 2739</a></p>
-        <a class="btn btn-primary" href="https://www.google.com/maps/dir/?api=1&amp;destination=Cabin+Rose+Station+Kemaman" target="_blank" rel="noopener">
-          <i class="ph ph-navigation-arrow" aria-hidden="true"></i><span data-i18n="loc.cta">Dapatkan Arah</span>
-        </a>
-      </div>
-    </div>
-  </section>
-
-</main>
-
-<footer class="site-foot">
-  <div class="container foot-in">
-    <div class="foot-brand">
-      <img class="logo-img" src="img/logo.jpg" alt="Logo Cabin Rose Station" width="320" height="320">
-      <div>
-        <p class="brand">Cabin <span>Rose</span> Station</p>
-        <p class="foot-tag" data-i18n="foot.tag">Kafe western di River Front, Kemaman. Sejak 2019.</p>
-      </div>
-    </div>
-    <div class="foot-social">
-      <a href="https://www.instagram.com/cabinrose_/" target="_blank" rel="noopener" aria-label="Instagram Cabin Rose Station"><i class="ph ph-instagram-logo" aria-hidden="true"></i></a>
-      <a href="https://www.facebook.com/p/Cabin-Rose-Station-100063535780627/" target="_blank" rel="noopener" aria-label="Facebook Cabin Rose Station"><i class="ph ph-facebook-logo" aria-hidden="true"></i></a>
-      <a href="https://wa.me/60139642739" target="_blank" rel="noopener" aria-label="WhatsApp Cabin Rose Station"><i class="ph ph-whatsapp-logo" aria-hidden="true"></i></a>
-    </div>
-  </div>
-  <div class="container foot-base">
-    <p>&copy; 2026 Cabin Rose Station. <span data-i18n="foot.rights">Hak cipta terpelihara.</span></p>
-    <!-- <a href="admin/login.php" class="admin-link">Urus Kafe</a> -->
-  </div>
-</footer>
-
-<script src="js/main.js"></script>
 </body>
 </html>
