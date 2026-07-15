@@ -23,6 +23,7 @@ ON DUPLICATE KEY UPDATE `password` = '$2y$10$qlkyqMpHwhYz.PZRXblND.yj0/GWEJd/4g8
 INSERT INTO `settings` (`setting_key`, `setting_value`) VALUES
 ('whatsapp', '60139642739'),
 ('phone_display', '013-964 2739'),
+('ambience_img_position', '90'),
 ('hours_daily_ms', '11:00 pagi - 11:00 malam'),
 ('hours_daily_en', '11:00 AM - 11:00 PM'),
 ('hours_fri_ms', '3:00 petang - 11:00 malam'),

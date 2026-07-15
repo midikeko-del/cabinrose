@@ -175,6 +175,14 @@
         if (data["menu_i" + i + "_desc_en"]) I18N.en["menu.i" + i + ".desc"] = data["menu_i" + i + "_desc_en"];
       }
 
+      // 4. Posisi Fokus Gambar Suasana (Paksi Vertikal)
+      if (data.ambience_img_position) {
+        var ambienceBg = document.querySelector(".ambience-bg");
+        if (ambienceBg) {
+          ambienceBg.style.objectPosition = "50% " + data.ambience_img_position + "%";
+        }
+      }
+
       // Terapkan semula bahasa dengan nilai baharu
       applyLang(document.documentElement.lang || currentLang);
     })
