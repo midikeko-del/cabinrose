@@ -242,9 +242,9 @@
       mapIframe.style.pointerEvents = "auto";
     });
 
-    var mapContainer = document.querySelector(".map-container");
-    if (mapContainer) {
-      mapContainer.addEventListener("mouseleave", function () {
+    var locationSection = document.getElementById("lokasi");
+    if (locationSection) {
+      locationSection.addEventListener("mouseleave", function () {
         mapOverlay.classList.remove("hidden");
         mapIframe.style.pointerEvents = "none";
       });
