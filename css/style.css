@@ -149,10 +149,10 @@ a:hover { text-decoration: underline; text-underline-offset: 3px; }
 }
 .rose-icon {
   display: inline-block;
-  width: .62em;
-  height: .62em;
-  margin-right: .18em;
-  vertical-align: baseline;
+  width: .8em;
+  height: .8em;
+  margin-left: .18em;
+  vertical-align: -0.08em;
   background: currentColor; /* ikut warna teks - sesuai light & dark mode */
   -webkit-mask: url("../img/rose.svg") center / contain no-repeat;
   mask: url("../img/rose.svg") center / contain no-repeat;
