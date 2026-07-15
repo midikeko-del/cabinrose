@@ -600,3 +600,116 @@ a:hover { text-decoration: underline; text-underline-offset: 3px; }
   /* Skrin sempit: logo sahaja di header (teks jenama disembunyikan, alt logo kekal untuk a11y) */
   .site-head .brand { font-size: 0; gap: 0; }
 }
+
+/* ---------- Modal (cth: makluman sebelum buka menu PDF) ---------- */
+.modal-latar {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 10, 10, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 100;
+}
+.modal-latar[hidden] { display: none; }
+.modal-kad {
+  position: relative;
+  background: var(--surface);
+  color: var(--ink);
+  border-radius: 14px;
+  padding: 2rem 1.75rem 1.75rem;
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+}
+.modal-kad h3 { margin: 0.75rem 0 0.5rem; font-size: 1.2rem; }
+.modal-kad p { color: var(--muted); margin: 0 0 1.4rem; font-size: 0.95rem; line-height: 1.5; }
+.modal-tutup {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0.25rem;
+}
+.modal-aksi { display: flex; flex-direction: column; gap: 0.6rem; }
+.modal-aksi .btn { width: 100%; justify-content: center; }
+
+/* Modal menu penuh */
+.modal-menu {
+  max-width: 720px;
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  padding: 0;
+  overflow: hidden;
+}
+.modal-menu-kepala {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.1rem 1.5rem;
+  border-bottom: 1px solid var(--line);
+}
+.modal-menu-kepala h3 { margin: 0; font-size: 1.25rem; }
+.modal-menu-kepala .modal-tutup { position: static; }
+.modal-menu-isi {
+  overflow-y: auto;
+  padding: 0.5rem 1.5rem 1rem;
+}
+.modal-menu-nota {
+  margin: 0;
+  padding: 0.8rem 1.5rem;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-align: center;
+}
+.menu-sek { margin-top: 1.4rem; }
+.menu-sek-kepala {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 0.5rem;
+}
+.menu-sek-kepala img {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex: none;
+}
+.menu-sek-kepala h4 {
+  margin: 0;
+  font-size: 1.05rem;
+  color: var(--accent);
+  flex: 1;
+}
+.menu-sek-hc { color: var(--muted); font-size: 0.8rem; white-space: nowrap; }
+.menu-sek ul { list-style: none; margin: 0; padding: 0; }
+.menu-sek li {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  padding: 0.45rem 0;
+  border-bottom: 1px dashed var(--line);
+  font-size: 0.95rem;
+}
+.menu-sek li:last-child { border-bottom: 0; }
+.menu-kod { color: var(--muted); font-size: 0.78rem; flex: none; min-width: 4.6em; }
+.menu-nama { flex: 1; }
+.menu-harga { font-weight: 600; white-space: nowrap; }
+
+@media (max-width: 560px) {
+  .modal-latar { padding: 12px; }
+  .modal-menu { max-height: 92vh; }
+  .modal-menu-kepala, .modal-menu-isi, .modal-menu-nota { padding-left: 1rem; padding-right: 1rem; }
+  .menu-kod { display: none; }
+}

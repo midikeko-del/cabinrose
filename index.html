@@ -127,9 +127,9 @@
         </article>
       </div>
       <div class="menu-actions reveal">
-        <a class="btn btn-ghost" href="menu.pdf" target="_blank" rel="noopener">
-          <i class="ph ph-file-pdf" aria-hidden="true"></i><span data-i18n="menu.pdfBtn">Muat Turun Menu PDF</span>
-        </a>
+        <button type="button" class="btn btn-ghost" id="menuBtn">
+          <i class="ph ph-fork-knife" aria-hidden="true"></i><span data-i18n="menu.viewBtn">Lihat Menu Penuh</span>
+        </button>
       </div>
       <p class="menu-note reveal"><span data-i18n="menu.note">Menu penuh dan promosi terkini ada di Instagram kami.</span>
         <a href="https://www.instagram.com/cabinrose_/" target="_blank" rel="noopener" data-i18n="menu.igLink">Ikuti @cabinrose_</a>
@@ -236,6 +236,38 @@
     <!-- <a href="admin/login.php" class="admin-link">Urus Kafe</a> -->
   </div>
 </footer>
+
+<div class="modal-latar" id="menuInfo" hidden>
+  <div class="modal-kad" role="dialog" aria-modal="true" aria-labelledby="menuInfoTitle">
+    <button type="button" class="modal-tutup" id="menuInfoClose" aria-label="Tutup">
+      <i class="ph ph-x" aria-hidden="true"></i>
+    </button>
+    <i class="ph ph-info" aria-hidden="true" style="font-size:2rem;color:var(--accent)"></i>
+    <h3 id="menuInfoTitle" data-i18n="menu.info.title">Sebelum lihat menu</h3>
+    <p data-i18n="menu.info.body">Menu dan harga mungkin berubah dari semasa ke semasa. Sila hubungi kami untuk pastikan item yang anda mahu tersedia sebelum datang.</p>
+    <div class="modal-aksi">
+      <button type="button" class="btn btn-primary" id="menuInfoProceed">
+        <i class="ph ph-fork-knife" aria-hidden="true"></i><span data-i18n="menu.info.proceed">Teruskan ke Menu</span>
+      </button>
+      <a class="btn btn-ghost" href="https://wa.me/60139642739?text=Hai%20Cabin%20Rose%20Station%2C%20saya%20nak%20tanya%20tentang%20menu." target="_blank" rel="noopener">
+        <i class="ph ph-whatsapp-logo" aria-hidden="true"></i><span data-i18n="menu.info.contact">Hubungi di WhatsApp</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="modal-latar" id="menuPenuh" hidden>
+  <div class="modal-kad modal-menu" role="dialog" aria-modal="true" aria-labelledby="menuPenuhTitle">
+    <div class="modal-menu-kepala">
+      <h3 id="menuPenuhTitle" data-i18n="menu.full.title">Menu Penuh</h3>
+      <button type="button" class="modal-tutup" id="menuPenuhClose" aria-label="Tutup">
+        <i class="ph ph-x" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div class="modal-menu-isi" id="menuPenuhIsi"></div>
+    <p class="modal-menu-nota" data-i18n="menu.full.note">Harga mungkin berubah. Hubungi kami untuk pengesahan item &amp; harga terkini.</p>
+  </div>
+</div>
 
 <script src="js/main.js"></script>
 </body>
