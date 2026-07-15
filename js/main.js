@@ -33,7 +33,7 @@
       "menu.pdfBtn": "Muat Turun Menu PDF",
       "menu.note": "Menu penuh dan promosi terkini ada di Instagram kami.",
       "menu.igLink": "Ikuti @cabinrose_",
-      "amb.title": "Datang sebab lapar, duduk sebab best.",
+      "amb.title": "Datang sebab lapar, <em>stay</em> sebab best.",
       "amb.body": "Lepak dengan keluarga, pasangan atau satu geng. Ambil kunci anda dan klik peta di bawah.",
       "ev.title": "Nak sambut birthday atau buat majlis?",
       "ev.body": "Jamuan, birthday party, majlis rasmi dan buffet. Bagitahu tarikh, kami siapkan tempat dan makanan.",
@@ -86,7 +86,7 @@
       "menu.pdfBtn": "Download PDF Menu",
       "menu.note": "Full menu and latest promos on our Instagram.",
       "menu.igLink": "Follow @cabinrose_",
-      "amb.title": "Come hungry, stay for the vibes.",
+      "amb.title": "Come hungry, <em>stay</em> for the vibes.",
       "amb.body": "Hang out with family, your partner or the whole gang. Grab your keys and click the map below.",
       "ev.title": "Birthday or an event coming up?",
       "ev.body": "Banquets, birthday parties, official functions and buffets. Tell us the date, we'll sort the food and the space.",
@@ -120,7 +120,7 @@
     var dict = I18N[lang] || I18N.ms;
     document.querySelectorAll("[data-i18n]").forEach(function (el) {
       var key = el.getAttribute("data-i18n");
-      if (dict[key]) el.textContent = dict[key];
+      if (dict[key]) el.innerHTML = dict[key];
     });
     document.documentElement.lang = lang;
     if (toggle) toggle.textContent = lang === "ms" ? "EN" : "BM";
