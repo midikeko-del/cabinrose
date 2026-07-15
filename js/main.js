@@ -124,6 +124,12 @@
     });
     document.documentElement.lang = lang;
     if (toggle) toggle.textContent = lang === "ms" ? "EN" : "BM";
+    
+    // Kemas kini tajuk dokumen secara dinamik untuk SEO dwi-bahasa
+    document.title = lang === "ms" 
+      ? "Cabin Rose Station | Cafe & Western Food Terbaik di Kemaman" 
+      : "Cabin Rose Station | Best Cafe & Western Food in Kemaman";
+
     try { localStorage.setItem(LANG_KEY, lang); } catch (e) { /* storan disekat: abaikan */ }
   }
 
