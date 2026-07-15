@@ -138,64 +138,6 @@
   var currentLang = saved === "ms" ? "ms" : "en";
   applyLang(currentLang); // Terjemah dengan nilai lalai dahulu (elak flash skrin kosong)
 
-  // Ambil tetapan dinamik dari MySQL (melalui get_settings.php)
-  fetch("get_settings.php")
-    .then(function (res) { return res.json(); })
-    .then(function (data) {
-      if (!data || Object.keys(data).length === 0) return;
-
-      // 1. WhatsApp & Telefon
-      if (data.whatsapp) {
-        document.querySelectorAll("a[href*='wa.me']").forEach(function (el) {
-          var origHref = el.getAttribute("href");
-          var textMatch = origHref.match(/text=([^&]*)/);
-          var text = textMatch ? textMatch[1] : "";
-          el.setAttribute("href", "https://wa.me/" + data.whatsapp + "?text=" + text);
-        });
-      }
-      if (data.phone_display) {
-        I18N.ms["bar.call"] = data.phone_display;
-        I18N.en["bar.call"] = data.phone_display;
-        document.querySelectorAll("a[href^='tel:']").forEach(function (el) {
-          el.setAttribute("href", "tel:" + (data.whatsapp || ""));
-          el.textContent = data.phone_display;
-        });
-      }
-
-      // 2. Waktu Operasi
-      if (data.hours_daily_ms) I18N.ms["bar.dailyHours"] = data.hours_daily_ms;
-      if (data.hours_daily_en) I18N.en["bar.dailyHours"] = data.hours_daily_en;
-      if (data.hours_fri_ms) I18N.ms["bar.friHours"] = data.hours_fri_ms;
-      if (data.hours_fri_en) I18N.en["bar.friHours"] = data.hours_fri_en;
-      
-      if (data.hours_weekday_ms) I18N.ms["loc.time1"] = data.hours_weekday_ms;
-      if (data.hours_weekday_en) I18N.en["loc.time1"] = data.hours_weekday_en;
-      if (data.hours_friday_ms) I18N.ms["loc.time2"] = data.hours_friday_ms;
-      if (data.hours_friday_en) I18N.en["loc.time2"] = data.hours_friday_en;
-
-      // 3. Bento Menu Grid (BM & EN)
-      for (var i = 1; i <= 4; i++) {
-        if (data["menu_i" + i + "_name_ms"]) I18N.ms["menu.i" + i + ".name"] = data["menu_i" + i + "_name_ms"];
-        if (data["menu_i" + i + "_name_en"]) I18N.en["menu.i" + i + ".name"] = data["menu_i" + i + "_name_en"];
-        if (data["menu_i" + i + "_desc_ms"]) I18N.ms["menu.i" + i + ".desc"] = data["menu_i" + i + "_desc_ms"];
-        if (data["menu_i" + i + "_desc_en"]) I18N.en["menu.i" + i + ".desc"] = data["menu_i" + i + "_desc_en"];
-      }
-
-      // 4. Posisi Fokus Gambar Suasana (Paksi Vertikal)
-      if (data.ambience_img_position) {
-        var ambienceBg = document.querySelector(".ambience-bg");
-        if (ambienceBg) {
-          ambienceBg.style.objectPosition = "50% " + data.ambience_img_position + "%";
-        }
-      }
-
-      // Terapkan semula bahasa dengan nilai baharu
-      applyLang(document.documentElement.lang || currentLang);
-    })
-    .catch(function (err) {
-      console.warn("MySQL settings not loaded, using HTML defaults:", err);
-    });
-
   if (toggle) {
     toggle.addEventListener("click", function () {
       applyLang(document.documentElement.lang === "ms" ? "en" : "ms");
