@@ -395,12 +395,14 @@ foreach ($allowed_keys as $key) {
           </div>
         </div>
 
+        <!-- HIDE SEMENTARA: Tetapan Paparan Gambar
         <h2 class="form-section-title" style="margin-top: 2rem;"><i class="ph ph-image"></i> Tetapan Paparan Gambar</h2>
         <div class="form-group">
           <label for="ambience_img_position">Posisi Fokus Gambar Suasana (Paksi Vertikal: <span id="posVal"><?php echo htmlspecialchars($settings['ambience_img_position'] ? $settings['ambience_img_position'] : '90'); ?></span>%)</label>
           <p class="label-desc">Kawal kedudukan gambar interior kafe (0% = fokus atas/siling, 100% = fokus bawah/kerusi & meja).</p>
           <input type="range" id="ambience_img_position" name="ambience_img_position" min="0" max="100" value="<?php echo htmlspecialchars($settings['ambience_img_position'] ? $settings['ambience_img_position'] : '90'); ?>" style="width: 100%; max-width: 500px; accent-color: var(--accent); cursor: pointer;" oninput="document.getElementById('posVal').textContent = this.value">
         </div>
+        -->
       </div>
 
       <!-- TAB 2: WAKTU OPERASI -->
