@@ -30,6 +30,7 @@
       "menu.i3.desc": "Western klasik, dimasak segar dengan sos homemade.",
       "menu.i4.name": "Kopi & Dessert",
       "menu.i4.desc": "Kopi pekat dan pencuci mulut untuk sesi lepak petang.",
+      "menu.pdfBtn": "Muat Turun Menu PDF",
       "menu.note": "Menu penuh dan promosi terkini ada di Instagram kami.",
       "menu.igLink": "Ikuti @cabinrose_",
       "amb.title": "Datang sebab lapar, duduk sebab best.",
@@ -53,6 +54,7 @@
       "loc.day2": "Jumaat",
       "loc.time2": "3:00 petang - 11:00 malam",
       "loc.cta": "Dapatkan Arah",
+      "loc.mapClick": "Sentuh untuk interaksi peta",
       "foot.tag": "Kafe western di River Front, Kemaman. Sejak 2019.",
       "foot.rights": "Hak cipta terpelihara."
     },
@@ -81,6 +83,7 @@
       "menu.i3.desc": "Western classics, cooked fresh with homemade sauce.",
       "menu.i4.name": "Coffee & Dessert",
       "menu.i4.desc": "Good coffee and desserts for slow evenings.",
+      "menu.pdfBtn": "Download PDF Menu",
       "menu.note": "Full menu and latest promos on our Instagram.",
       "menu.igLink": "Follow @cabinrose_",
       "amb.title": "Come hungry, stay for the vibes.",
@@ -104,6 +107,7 @@
       "loc.day2": "Friday",
       "loc.time2": "3:00 PM - 11:00 PM",
       "loc.cta": "Get Directions",
+      "loc.mapClick": "Tap to interact with map",
       "foot.tag": "A western cafe at River Front, Kemaman. Since 2019.",
       "foot.rights": "All rights reserved."
     }
@@ -125,7 +129,58 @@
 
   var saved = null;
   try { saved = localStorage.getItem(LANG_KEY); } catch (e) { /* abaikan */ }
-  applyLang(saved === "ms" ? "ms" : "en"); // default paparan: English, kecuali pengguna pilih BM
+  var currentLang = saved === "ms" ? "ms" : "en";
+  applyLang(currentLang); // Terjemah dengan nilai lalai dahulu (elak flash skrin kosong)
+
+  // Ambil tetapan dinamik dari MySQL (melalui get_settings.php)
+  fetch("get_settings.php")
+    .then(function (res) { return res.json(); })
+    .then(function (data) {
+      if (!data || Object.keys(data).length === 0) return;
+
+      // 1. WhatsApp & Telefon
+      if (data.whatsapp) {
+        document.querySelectorAll("a[href*='wa.me']").forEach(function (el) {
+          var origHref = el.getAttribute("href");
+          var textMatch = origHref.match(/text=([^&]*)/);
+          var text = textMatch ? textMatch[1] : "";
+          el.setAttribute("href", "https://wa.me/" + data.whatsapp + "?text=" + text);
+        });
+      }
+      if (data.phone_display) {
+        I18N.ms["bar.call"] = data.phone_display;
+        I18N.en["bar.call"] = data.phone_display;
+        document.querySelectorAll("a[href^='tel:']").forEach(function (el) {
+          el.setAttribute("href", "tel:" + (data.whatsapp || ""));
+          el.textContent = data.phone_display;
+        });
+      }
+
+      // 2. Waktu Operasi
+      if (data.hours_daily_ms) I18N.ms["bar.dailyHours"] = data.hours_daily_ms;
+      if (data.hours_daily_en) I18N.en["bar.dailyHours"] = data.hours_daily_en;
+      if (data.hours_fri_ms) I18N.ms["bar.friHours"] = data.hours_fri_ms;
+      if (data.hours_fri_en) I18N.en["bar.friHours"] = data.hours_fri_en;
+      
+      if (data.hours_weekday_ms) I18N.ms["loc.time1"] = data.hours_weekday_ms;
+      if (data.hours_weekday_en) I18N.en["loc.time1"] = data.hours_weekday_en;
+      if (data.hours_friday_ms) I18N.ms["loc.time2"] = data.hours_friday_ms;
+      if (data.hours_friday_en) I18N.en["loc.time2"] = data.hours_friday_en;
+
+      // 3. Bento Menu Grid (BM & EN)
+      for (var i = 1; i <= 4; i++) {
+        if (data["menu_i" + i + "_name_ms"]) I18N.ms["menu.i" + i + ".name"] = data["menu_i" + i + "_name_ms"];
+        if (data["menu_i" + i + "_name_en"]) I18N.en["menu.i" + i + ".name"] = data["menu_i" + i + "_name_en"];
+        if (data["menu_i" + i + "_desc_ms"]) I18N.ms["menu.i" + i + ".desc"] = data["menu_i" + i + "_desc_ms"];
+        if (data["menu_i" + i + "_desc_en"]) I18N.en["menu.i" + i + ".desc"] = data["menu_i" + i + "_desc_en"];
+      }
+
+      // Terapkan semula bahasa dengan nilai baharu
+      applyLang(document.documentElement.lang || currentLang);
+    })
+    .catch(function (err) {
+      console.warn("MySQL settings not loaded, using HTML defaults:", err);
+    });
 
   if (toggle) {
     toggle.addEventListener("click", function () {
@@ -165,5 +220,34 @@
       });
     }, { threshold: 0.15, rootMargin: "0px 0px -40px 0px" });
     items.forEach(function (el) { io.observe(el); });
+  }
+
+  /* ---------- Pengendali Overlay Peta (Map Overlay Handler) ---------- */
+  var mapOverlay = document.getElementById("mapOverlay");
+  var mapIframe = document.querySelector(".map");
+  if (mapOverlay && mapIframe) {
+    // Tutup interaksi peta secara lalai
+    mapIframe.style.pointerEvents = "none";
+
+    mapOverlay.addEventListener("click", function () {
+      mapOverlay.classList.add("hidden");
+      mapIframe.style.pointerEvents = "auto";
+    });
+
+    var mapContainer = document.querySelector(".map-container");
+    if (mapContainer) {
+      mapContainer.addEventListener("mouseleave", function () {
+        mapOverlay.classList.remove("hidden");
+        mapIframe.style.pointerEvents = "none";
+      });
+    }
+
+    // Set semula sekiranya pengguna klik di luar peta
+    document.addEventListener("click", function (e) {
+      if (mapContainer && !mapContainer.contains(e.target)) {
+        mapOverlay.classList.remove("hidden");
+        mapIframe.style.pointerEvents = "none";
+      }
+    }, true);
   }
 })();

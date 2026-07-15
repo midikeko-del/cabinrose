@@ -130,6 +130,11 @@
           </div>
         </article>
       </div>
+      <div class="menu-actions reveal">
+        <a class="btn btn-ghost" href="menu.pdf" target="_blank" rel="noopener">
+          <i class="ph ph-file-pdf" aria-hidden="true"></i><span data-i18n="menu.pdfBtn">Muat Turun Menu PDF</span>
+        </a>
+      </div>
       <p class="menu-note reveal"><span data-i18n="menu.note">Menu penuh dan promosi terkini ada di Instagram kami.</span>
         <a href="https://www.instagram.com/cabinrose_/" target="_blank" rel="noopener" data-i18n="menu.igLink">Ikuti @cabinrose_</a>
       </p>
@@ -190,7 +195,13 @@
 
   <!-- LOKASI : peta penuh + kad info -->
   <section class="location" id="lokasi">
-    <iframe class="map" src="https://maps.google.com/maps?q=Cabin%20Rose%20Station%20Kemaman&amp;z=16&amp;output=embed" title="Peta lokasi Cabin Rose Station" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade"></iframe>
+    <div class="map-container">
+      <iframe class="map" src="https://maps.google.com/maps?q=Cabin%20Rose%20Station%20Kemaman&amp;z=16&amp;output=embed" title="Peta lokasi Cabin Rose Station" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade"></iframe>
+      <div class="map-overlay" id="mapOverlay">
+        <i class="ph ph-hand-pointing" aria-hidden="true"></i>
+        <span data-i18n="loc.mapClick">Sentuh untuk interaksi peta</span>
+      </div>
+    </div>
     <div class="container">
       <div class="loc-card">
         <h2 data-i18n="loc.title">Cari kami</h2>
@@ -226,6 +237,7 @@
   </div>
   <div class="container foot-base">
     <p>&copy; 2026 Cabin Rose Station. <span data-i18n="foot.rights">Hak cipta terpelihara.</span></p>
+    <a href="admin/login.php" class="admin-link">Urus Kafe</a>
   </div>
 </footer>
 
