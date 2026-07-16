@@ -67,26 +67,26 @@ foreach ($attrText as $ms => $en) {
 }
 
 /* ---------- 4. Kepala halaman ---------- */
-$titleEn = 'Cabin Rose Station | Best Cafe &amp; Western Food in Kemaman';
-$descEn  = 'Looking for the best western food in Kemaman? Enjoy cheesy corndogs, '
-         . 'buttermilk chicken, premium coffee &amp; desserts at Cabin Rose Station '
-         . 'River Front. An aesthetic cafe made for hanging out!';
-$ogDescEn = 'Looking for the best western food in Kemaman? Enjoy cheesy corndogs, '
-          . 'buttermilk chicken, premium coffee &amp; desserts at Cabin Rose Station River Front.';
+$titleEn = 'Cabin Rose Station | Best Halal Western Cafe in Kemaman';
+$descEn  = 'Halal western cafe in Kemaman. Cheesy corndogs, buttermilk rice, premium '
+         . 'coffee &amp; desserts at Cabin Rose Station River Front. JAKIM halal certified, '
+         . 'open daily until 11 PM.';
+$ogDescEn = 'Halal western cafe in Kemaman. Cheesy corndogs, buttermilk rice, premium '
+          . 'coffee &amp; desserts at Cabin Rose Station River Front. JAKIM halal certified.';
 
 $head = [
     '<html lang="ms">' => '<html lang="en">',
 
-    '<title>Cabin Rose Station | Cafe &amp; Western Food Terbaik di Kemaman</title>'
+    '<title>Cabin Rose Station | Cafe Western Halal Terbaik di Kemaman</title>'
         => "<title>$titleEn</title>",
 
-    '<meta name="description" content="Mencari western food terbaik di Kemaman? Nikmati cheesy corndog, buttermilk chicken, kopi premium &amp; dessert di Cabin Rose Station River Front. Suasana cafe aesthetic &amp; sesuai lepak!">'
+    '<meta name="description" content="Kafe western halal di Kemaman. Cheesy corndog, nasi buttermilk, kopi premium &amp; dessert di Cabin Rose Station River Front. Bersijil halal JAKIM, buka setiap hari sampai 11 malam.">'
         => "<meta name=\"description\" content=\"$descEn\">",
 
-    '<meta property="og:title" content="Cabin Rose Station | Cafe &amp; Western Food Terbaik di Kemaman">'
+    '<meta property="og:title" content="Cabin Rose Station | Cafe Western Halal Terbaik di Kemaman">'
         => "<meta property=\"og:title\" content=\"$titleEn\">",
 
-    '<meta property="og:description" content="Mencari western food terbaik di Kemaman? Nikmati cheesy corndog, buttermilk chicken, kopi premium &amp; dessert di Cabin Rose Station River Front.">'
+    '<meta property="og:description" content="Kafe western halal di Kemaman. Cheesy corndog, nasi buttermilk, kopi premium &amp; dessert di Cabin Rose Station River Front. Bersijil halal JAKIM.">'
         => "<meta property=\"og:description\" content=\"$ogDescEn\">",
 
     '<meta property="og:image:alt" content="Hidangan western di Cabin Rose Station, Kemaman">'
@@ -121,6 +121,50 @@ if (!preg_match($commentPattern, $html)) {
 }
 $html = preg_replace($commentPattern, $commentEn, $html);
 
+/* ---------- 4b. Bina semula FAQPage schema dalam EN ---------- */
+// Google mengabaikan FAQ schema yang tidak sepadan dengan teks yang pelawat
+// nampak. Kedua-duanya dibina daripada kunci faq.* yang sama, jadi ia tidak
+// boleh terpisah.
+$faq = [];
+for ($i = 1; array_key_exists("faq.q$i", $dict); $i++) {
+    if (!array_key_exists("faq.a$i", $dict)) {
+        fwrite(STDERR, "AMARAN: faq.q$i ada tetapi faq.a$i tiada\n");
+        break;
+    }
+    $faq[] = [
+        "@type" => "Question",
+        "name"  => html_entity_decode($dict["faq.q$i"], ENT_QUOTES, "UTF-8"),
+        "acceptedAnswer" => [
+            "@type" => "Answer",
+            "text"  => html_entity_decode($dict["faq.a$i"], ENT_QUOTES, "UTF-8"),
+        ],
+    ];
+}
+
+// Bilangan mesti sepadan dengan <summary data-i18n="faq.q*"> dalam HTML.
+$summaryCount = preg_match_all('/data-i18n="faq\.q\d+"/', $html);
+if (count($faq) !== $summaryCount) {
+    fwrite(STDERR, sprintf(
+        "AMARAN: %d soalan dalam kamus tetapi %d dalam HTML - schema tidak akan sepadan\n",
+        count($faq), $summaryCount
+    ));
+}
+
+$faqJson = json_encode(
+    ["@context" => "https://schema.org", "@type" => "FAQPage", "mainEntity" => $faq],
+    JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
+);
+
+$faqPattern = '#(<script type="application/ld\+json" id="faq-schema">).*?(</script>)#s';
+if (!preg_match($faqPattern, $html)) {
+    fwrite(STDERR, "AMARAN: blok faq-schema tidak dijumpai dalam index.html\n");
+}
+// Callback, bukan rujukan $1: JSON boleh mengandungi backslash yang akan
+// ditafsir sebagai rujukan tangkapan.
+$html = preg_replace_callback($faqPattern, function ($m) use ($faqJson) {
+    return $m[1] . "\r\n" . $faqJson . "\r\n  " . $m[2];
+}, $html);
+
 /* ---------- 5. Laluan aset naik satu tingkat ---------- */
 // Hanya laluan relatif. URL mutlak (https://cabinrose.my/img/...) tidak disentuh
 // kerana ia bermula dengan ="https:.
@@ -139,7 +183,9 @@ printf("ditulis                 : en/index.html (%.1f KB)\n", filesize($outFile)
 
 // Semakan waras: tiada teks BM ketara tertinggal
 $leftover = [];
-foreach (['Tempah Sekarang', 'Lihat Menu', 'Buka setiap hari', 'Kata pengunjung', 'Cari kami', 'Hak cipta'] as $t) {
+foreach (['Tempah Sekarang', 'Lihat Menu', 'Buka setiap hari', 'Kata pengunjung',
+          'Cari kami', 'Hak cipta', 'Soalan lazim', 'memegang sijil halal',
+          'Kami buka setiap hari'] as $t) {
     if (strpos($html, $t) !== false) $leftover[] = $t;
 }
 echo $leftover

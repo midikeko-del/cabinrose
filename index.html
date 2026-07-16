@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cabin Rose Station | Cafe &amp; Western Food Terbaik di Kemaman</title>
-<meta name="description" content="Mencari western food terbaik di Kemaman? Nikmati cheesy corndog, buttermilk chicken, kopi premium &amp; dessert di Cabin Rose Station River Front. Suasana cafe aesthetic &amp; sesuai lepak!">
-<meta property="og:title" content="Cabin Rose Station | Cafe &amp; Western Food Terbaik di Kemaman">
-<meta property="og:description" content="Mencari western food terbaik di Kemaman? Nikmati cheesy corndog, buttermilk chicken, kopi premium &amp; dessert di Cabin Rose Station River Front.">
+<title>Cabin Rose Station | Cafe Western Halal Terbaik di Kemaman</title>
+<meta name="description" content="Kafe western halal di Kemaman. Cheesy corndog, nasi buttermilk, kopi premium &amp; dessert di Cabin Rose Station River Front. Bersijil halal JAKIM, buka setiap hari sampai 11 malam.">
+<meta property="og:title" content="Cabin Rose Station | Cafe Western Halal Terbaik di Kemaman">
+<meta property="og:description" content="Kafe western halal di Kemaman. Cheesy corndog, nasi buttermilk, kopi premium &amp; dessert di Cabin Rose Station River Front. Bersijil halal JAKIM.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://cabinrose.my/">
 <meta property="og:image" content="https://cabinrose.my/img/og-image.jpg">
@@ -82,6 +82,7 @@
       <a href="#menu" data-i18n="nav.menu">Menu</a>
       <a href="#suasana" data-i18n="nav.ambience">Suasana</a>
       <a href="#ulasan" data-i18n="nav.reviews">Ulasan</a>
+      <a href="#faq" data-i18n="nav.faq">FAQ</a>
       <a href="#lokasi" data-i18n="nav.location">Lokasi</a>
     </nav>
     <div class="head-actions">
@@ -219,6 +220,92 @@
       <p class="menu-note reveal"><a href="https://www.google.com/maps/search/?api=1&amp;query=Cabin+Rose+Station+Kemaman" target="_blank" rel="noopener" data-i18n="rev.more">Baca lagi ulasan di Google Maps</a></p>
     </div>
   </section>
+
+  <!-- SOALAN LAZIM : accordion asli <details>, tiada JS.
+       AMARAN: teks di sini mesti kekal serupa dengan blok FAQPage JSON-LD di
+       bawah. Google menolak FAQ schema yang tidak sepadan dengan apa yang
+       pelawat nampak. Kedua-duanya diambil dari kunci faq.* dalam main.js. -->
+  <section class="section" id="faq">
+    <div class="container">
+      <h2 class="reveal" data-i18n="faq.title">Soalan lazim</h2>
+      <div class="faq-list">
+        <details class="faq-item reveal">
+          <summary data-i18n="faq.q1">Cabin Rose Station halal?</summary>
+          <p data-i18n="faq.a1">Ya. Cabin Rose Station memegang sijil halal JAKIM.</p>
+        </details>
+        <details class="faq-item reveal">
+          <summary data-i18n="faq.q2">Apa waktu operasi Cabin Rose Station?</summary>
+          <p data-i18n="faq.a2">Kami buka setiap hari. Sabtu hingga Khamis dari 11:00 pagi sampai 11:00 malam, dan pada hari Jumaat kami buka lewat sedikit iaitu 3:00 petang sampai 11:00 malam.</p>
+        </details>
+        <details class="faq-item reveal">
+          <summary data-i18n="faq.q3">Di mana lokasi Cabin Rose Station di Kemaman?</summary>
+          <p data-i18n="faq.a3">Kami di L-94-G, Jalan Raja Udang 3, River Front Business Centre, 24000 Kemaman, Terengganu. Kafe kami terletak di tepi Sungai Kemaman dalam kawasan River Front.</p>
+        </details>
+        <details class="faq-item reveal">
+          <summary data-i18n="faq.q4">Boleh tempah meja dahulu?</summary>
+          <p data-i18n="faq.a4">Boleh. Tekan butang Tempah Sekarang di laman ini dan isi borang ringkas, atau WhatsApp terus ke 013-964 2739.</p>
+        </details>
+        <details class="faq-item reveal">
+          <summary data-i18n="faq.q5">Boleh buat majlis atau birthday party di sini?</summary>
+          <p data-i18n="faq.a5">Boleh. Kami uruskan jamuan, birthday party, majlis rasmi dan buffet. Bagitahu tarikh dan bilangan tetamu melalui WhatsApp, kami siapkan tempat dan makanan.</p>
+        </details>
+        <details class="faq-item reveal">
+          <summary data-i18n="faq.q6">Apa menu paling popular di sini?</summary>
+          <p data-i18n="faq.a6">Corndog Cheese Tarik dengan mozarella di dalamnya ialah yang paling laris. Nasi Buttermilk, Chicken Chop Grill serta pizza homemade juga antara pilihan utama pelanggan.</p>
+        </details>
+        <details class="faq-item reveal">
+          <summary data-i18n="faq.q7">Berapa julat harga makanan di Cabin Rose Station?</summary>
+          <p data-i18n="faq.a7">Minuman bermula dari RM2.00 dan snek dari RM7.90. Kebanyakan set nasi dan hidangan western antara RM18 hingga RM26, manakala menu premium seperti Argentina Ribeye Steak mencecah RM80.00.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dijana semula untuk /en/ oleh tools/build-en.php daripada kunci faq.*
+       supaya schema dan teks yang nampak sentiasa sepadan dalam kedua-dua bahasa. -->
+  <script type="application/ld+json" id="faq-schema">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Cabin Rose Station halal?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Ya. Cabin Rose Station memegang sijil halal JAKIM." }
+      },
+      {
+        "@type": "Question",
+        "name": "Apa waktu operasi Cabin Rose Station?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Kami buka setiap hari. Sabtu hingga Khamis dari 11:00 pagi sampai 11:00 malam, dan pada hari Jumaat kami buka lewat sedikit iaitu 3:00 petang sampai 11:00 malam." }
+      },
+      {
+        "@type": "Question",
+        "name": "Di mana lokasi Cabin Rose Station di Kemaman?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Kami di L-94-G, Jalan Raja Udang 3, River Front Business Centre, 24000 Kemaman, Terengganu. Kafe kami terletak di tepi Sungai Kemaman dalam kawasan River Front." }
+      },
+      {
+        "@type": "Question",
+        "name": "Boleh tempah meja dahulu?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Boleh. Tekan butang Tempah Sekarang di laman ini dan isi borang ringkas, atau WhatsApp terus ke 013-964 2739." }
+      },
+      {
+        "@type": "Question",
+        "name": "Boleh buat majlis atau birthday party di sini?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Boleh. Kami uruskan jamuan, birthday party, majlis rasmi dan buffet. Bagitahu tarikh dan bilangan tetamu melalui WhatsApp, kami siapkan tempat dan makanan." }
+      },
+      {
+        "@type": "Question",
+        "name": "Apa menu paling popular di sini?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Corndog Cheese Tarik dengan mozarella di dalamnya ialah yang paling laris. Nasi Buttermilk, Chicken Chop Grill serta pizza homemade juga antara pilihan utama pelanggan." }
+      },
+      {
+        "@type": "Question",
+        "name": "Berapa julat harga makanan di Cabin Rose Station?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Minuman bermula dari RM2.00 dan snek dari RM7.90. Kebanyakan set nasi dan hidangan western antara RM18 hingga RM26, manakala menu premium seperti Argentina Ribeye Steak mencecah RM80.00." }
+      }
+    ]
+  }
+  </script>
 
   <!-- LOKASI : peta penuh + kad info -->
   <section class="location" id="lokasi">

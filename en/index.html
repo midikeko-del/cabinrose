@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cabin Rose Station | Best Cafe &amp; Western Food in Kemaman</title>
-<meta name="description" content="Looking for the best western food in Kemaman? Enjoy cheesy corndogs, buttermilk chicken, premium coffee &amp; desserts at Cabin Rose Station River Front. An aesthetic cafe made for hanging out!">
-<meta property="og:title" content="Cabin Rose Station | Best Cafe &amp; Western Food in Kemaman">
-<meta property="og:description" content="Looking for the best western food in Kemaman? Enjoy cheesy corndogs, buttermilk chicken, premium coffee &amp; desserts at Cabin Rose Station River Front.">
+<title>Cabin Rose Station | Best Halal Western Cafe in Kemaman</title>
+<meta name="description" content="Halal western cafe in Kemaman. Cheesy corndogs, buttermilk rice, premium coffee &amp; desserts at Cabin Rose Station River Front. JAKIM halal certified, open daily until 11 PM.">
+<meta property="og:title" content="Cabin Rose Station | Best Halal Western Cafe in Kemaman">
+<meta property="og:description" content="Halal western cafe in Kemaman. Cheesy corndogs, buttermilk rice, premium coffee &amp; desserts at Cabin Rose Station River Front. JAKIM halal certified.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://cabinrose.my/en/">
 <meta property="og:image" content="https://cabinrose.my/img/og-image.jpg">
@@ -82,6 +82,7 @@
       <a href="#menu" data-i18n="nav.menu">Menu</a>
       <a href="#suasana" data-i18n="nav.ambience">The Space</a>
       <a href="#ulasan" data-i18n="nav.reviews">Reviews</a>
+      <a href="#faq" data-i18n="nav.faq">FAQ</a>
       <a href="#lokasi" data-i18n="nav.location">Location</a>
     </nav>
     <div class="head-actions">
@@ -219,6 +220,113 @@
       <p class="menu-note reveal"><a href="https://www.google.com/maps/search/?api=1&amp;query=Cabin+Rose+Station+Kemaman" target="_blank" rel="noopener" data-i18n="rev.more">Read more reviews on Google Maps</a></p>
     </div>
   </section>
+
+  <!-- SOALAN LAZIM : accordion asli <details>, tiada JS.
+       AMARAN: teks di sini mesti kekal serupa dengan blok FAQPage JSON-LD di
+       bawah. Google menolak FAQ schema yang tidak sepadan dengan apa yang
+       pelawat nampak. Kedua-duanya diambil dari kunci faq.* dalam main.js. -->
+  <section class="section" id="faq">
+    <div class="container">
+      <h2 class="reveal" data-i18n="faq.title">Frequently asked questions</h2>
+      <div class="faq-list">
+        <details class="faq-item reveal">
+          <summary data-i18n="faq.q1">Is Cabin Rose Station halal?</summary>
+          <p data-i18n="faq.a1">Yes. Cabin Rose Station holds JAKIM halal certification.</p>
+        </details>
+        <details class="faq-item reveal">
+          <summary data-i18n="faq.q2">What are Cabin Rose Station's opening hours?</summary>
+          <p data-i18n="faq.a2">We open daily. Saturday to Thursday from 11:00 AM until 11:00 PM, and on Friday we open a little later, from 3:00 PM until 11:00 PM.</p>
+        </details>
+        <details class="faq-item reveal">
+          <summary data-i18n="faq.q3">Where is Cabin Rose Station located in Kemaman?</summary>
+          <p data-i18n="faq.a3">We are at L-94-G, Jalan Raja Udang 3, River Front Business Centre, 24000 Kemaman, Terengganu. Our cafe sits by the Kemaman river in the River Front area.</p>
+        </details>
+        <details class="faq-item reveal">
+          <summary data-i18n="faq.q4">Can I book a table in advance?</summary>
+          <p data-i18n="faq.a4">Yes. Tap the Book Now button on this page and fill in the short form, or WhatsApp us directly at 013-964 2739.</p>
+        </details>
+        <details class="faq-item reveal">
+          <summary data-i18n="faq.q5">Can I hold an event or birthday party here?</summary>
+          <p data-i18n="faq.a5">Yes. We handle banquets, birthday parties, official functions and buffets. Send us the date and guest count on WhatsApp and we will sort the space and the food.</p>
+        </details>
+        <details class="faq-item reveal">
+          <summary data-i18n="faq.q6">What is the most popular dish here?</summary>
+          <p data-i18n="faq.a6">The Corndog Cheese Tarik with stretchy mozzarella inside is our best seller. Buttermilk Rice, Chicken Chop Grill and our homemade pizzas are also regular favourites.</p>
+        </details>
+        <details class="faq-item reveal">
+          <summary data-i18n="faq.q7">What is the price range at Cabin Rose Station?</summary>
+          <p data-i18n="faq.a7">Drinks start from RM2.00 and snacks from RM7.90. Most rice sets and western mains fall between RM18 and RM26, while premium items such as the Argentina Ribeye Steak reach RM80.00.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dijana semula untuk /en/ oleh tools/build-en.php daripada kunci faq.*
+       supaya schema dan teks yang nampak sentiasa sepadan dalam kedua-dua bahasa. -->
+  <script type="application/ld+json" id="faq-schema">
+{
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+        {
+            "@type": "Question",
+            "name": "Is Cabin Rose Station halal?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. Cabin Rose Station holds JAKIM halal certification."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "What are Cabin Rose Station's opening hours?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "We open daily. Saturday to Thursday from 11:00 AM until 11:00 PM, and on Friday we open a little later, from 3:00 PM until 11:00 PM."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Where is Cabin Rose Station located in Kemaman?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "We are at L-94-G, Jalan Raja Udang 3, River Front Business Centre, 24000 Kemaman, Terengganu. Our cafe sits by the Kemaman river in the River Front area."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Can I book a table in advance?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. Tap the Book Now button on this page and fill in the short form, or WhatsApp us directly at 013-964 2739."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Can I hold an event or birthday party here?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. We handle banquets, birthday parties, official functions and buffets. Send us the date and guest count on WhatsApp and we will sort the space and the food."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "What is the most popular dish here?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "The Corndog Cheese Tarik with stretchy mozzarella inside is our best seller. Buttermilk Rice, Chicken Chop Grill and our homemade pizzas are also regular favourites."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "What is the price range at Cabin Rose Station?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Drinks start from RM2.00 and snacks from RM7.90. Most rice sets and western mains fall between RM18 and RM26, while premium items such as the Argentina Ribeye Steak reach RM80.00."
+            }
+        }
+    ]
+}
+  </script>
 
   <!-- LOKASI : peta penuh + kad info -->
   <section class="location" id="lokasi">
