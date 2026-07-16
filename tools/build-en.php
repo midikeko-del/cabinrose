@@ -67,7 +67,7 @@ foreach ($attrText as $ms => $en) {
 }
 
 /* ---------- 4. Kepala halaman ---------- */
-$titleEn = 'Cabin Rose Station | Best Halal Western Cafe in Kemaman';
+$titleEn = 'Cabin Rose Station | First-Choice Halal Western Cafe in Kemaman';
 $descEn  = 'Halal western cafe in Kemaman. Cheesy corndogs, buttermilk rice, premium '
          . 'coffee &amp; desserts at Cabin Rose Station River Front. JAKIM halal certified, '
          . 'open daily until 11 PM.';
@@ -77,13 +77,13 @@ $ogDescEn = 'Halal western cafe in Kemaman. Cheesy corndogs, buttermilk rice, pr
 $head = [
     '<html lang="ms">' => '<html lang="en">',
 
-    '<title>Cabin Rose Station | Cafe Western Halal Terbaik di Kemaman</title>'
+    '<title>Cabin Rose Station | Cafe Western Halal Pilihan Pertama di Kemaman</title>'
         => "<title>$titleEn</title>",
 
     '<meta name="description" content="Kafe western halal di Kemaman. Cheesy corndog, nasi buttermilk, kopi premium &amp; dessert di Cabin Rose Station River Front. Bersijil halal JAKIM, buka setiap hari sampai 11 malam.">'
         => "<meta name=\"description\" content=\"$descEn\">",
 
-    '<meta property="og:title" content="Cabin Rose Station | Cafe Western Halal Terbaik di Kemaman">'
+    '<meta property="og:title" content="Cabin Rose Station | Cafe Western Halal Pilihan Pertama di Kemaman">'
         => "<meta property=\"og:title\" content=\"$titleEn\">",
 
     '<meta property="og:description" content="Kafe western halal di Kemaman. Cheesy corndog, nasi buttermilk, kopi premium &amp; dessert di Cabin Rose Station River Front. Bersijil halal JAKIM.">'

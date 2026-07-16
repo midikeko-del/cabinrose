@@ -118,6 +118,14 @@ a:hover { text-decoration: underline; text-underline-offset: 3px; }
   background: #25d366;
   color: #ffffff;
 }
+
+.btn-review {
+  background: var(--accent);
+  color: #ffffff;
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--accent) 40%, transparent);
+}
+.btn-review:hover { opacity: .92; }
+.btn-review i { color: #ffe9a8; }
 .btn-book:hover { opacity: .9; }
 
 /* ---------- Header ---------- */
@@ -509,7 +517,8 @@ a:hover { text-decoration: underline; text-underline-offset: 3px; }
 .foot-brand { display: flex; align-items: center; gap: 1rem; }
 .foot-brand .logo-img { width: 52px; height: 52px; }
 .foot-tag { color: var(--muted); font-size: .95rem; margin: .3rem 0 0; }
-.foot-social { display: flex; gap: .7rem; }
+.foot-social { display: flex; gap: .7rem; align-items: center; flex-wrap: wrap; }
+.foot-follow { color: var(--muted); font-size: .9rem; font-weight: 600; margin-right: .2rem; }
 .foot-social a {
   display: inline-flex; align-items: center; justify-content: center;
   width: 42px; height: 42px;
