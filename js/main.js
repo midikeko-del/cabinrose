@@ -47,6 +47,7 @@
       "rev.q3.text": "“Tempat yang sesuai untuk keluarga, pasangan dan kawan-kawan.”",
       "rev.q3.who": "Ulasan pengunjung",
       "rev.q3.src": "di Facebook",
+      "rev.cta": "Beri Ulasan Google",
       "rev.more": "Baca lagi ulasan di Google Maps",
       "loc.title": "Cari kami",
       "loc.day1": "Sabtu - Khamis",
@@ -86,7 +87,8 @@
       "book.date": "Tarikh",
       "book.time": "Masa",
       "book.pax": "Bilangan orang",
-      "book.notes": "Catatan (pilihan)",
+      "book.notes": "Catatan (cth: menu yang nak diorder, permintaan khas)",
+      "book.viewMenu": "Lihat Menu Penuh",
       "book.submit": "Hantar ke WhatsApp"
     },
     en: {
@@ -131,6 +133,7 @@
       "rev.q3.text": "“A great place for families, couples and friends.”",
       "rev.q3.who": "Guest review",
       "rev.q3.src": "on Facebook",
+      "rev.cta": "Leave a Google Review",
       "rev.more": "Read more reviews on Google Maps",
       "loc.title": "Find us",
       "loc.day1": "Saturday - Thursday",
@@ -170,7 +173,8 @@
       "book.date": "Date",
       "book.time": "Time",
       "book.pax": "Number of guests",
-      "book.notes": "Notes (optional)",
+      "book.notes": "Notes (e.g. items you'd like to order, special requests)",
+      "book.viewMenu": "View Full Menu",
       "book.submit": "Send via WhatsApp"
     }
   };
@@ -417,10 +421,14 @@
   }
 
   function renderMenu(sasaran) {
+    // Path imej relatif: pada /en/ ia perlu "../" supaya menuju /img/ dan bukan
+    // /en/img/ (yang tak wujud). Relatif, bukan mutlak, supaya subfolder XAMPP
+    // tempatan turut berfungsi — sama seperti toggle bahasa.
+    var imgBase = currentLang === "en" ? "../" : "";
     var html = MENU.map(function (sek) {
       var kepala =
         '<div class="menu-sek-kepala">' +
-        '<img src="' + sek.img + '" alt="" loading="lazy" width="88" height="88">' +
+        '<img src="' + imgBase + sek.img + '" alt="" loading="lazy" width="88" height="88">' +
         "<h4>" + eskep(sek.t) + "</h4>" +
         (sek.hc
           ? '<span class="menu-sek-hc"><span data-i18n="menu.full.hot">Panas</span> / <span data-i18n="menu.full.cold">Sejuk</span></span>'
@@ -460,6 +468,12 @@
       menuPenuh.hidden = false;
     });
 
+    // Dari borang tempahan: buka menu penuh terus (langkau notis) supaya
+    // pelanggan boleh lihat item lalu tulis pesanan dalam ruangan catatan.
+    document.querySelectorAll(".js-view-menu").forEach(function (btn) {
+      btn.addEventListener("click", function () { menuPenuh.hidden = false; });
+    });
+
     [menuInfo, menuPenuh].forEach(function (latar) {
       latar.addEventListener("click", function (e) {
         if (e.target === latar) tutupSemua();
@@ -485,7 +499,10 @@
       if (e.target === bookingModal) closeBooking();
     });
     document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape" && !bookingModal.hidden) closeBooking();
+      // Jangan tutup borang bila menu penuh sedang terbuka atasnya —
+      // Escape sepatutnya tutup menu sahaja dan kembali ke borang.
+      var menuOpen = menuPenuh && !menuPenuh.hidden;
+      if (e.key === "Escape" && !bookingModal.hidden && !menuOpen) closeBooking();
     });
 
     bookingForm.addEventListener("submit", function (e) {

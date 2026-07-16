@@ -367,6 +367,7 @@ a:hover { text-decoration: underline; text-underline-offset: 3px; }
   padding: 0.75rem 1.6rem;
 }
 
+.rev-actions { margin-top: 2rem; display: flex; justify-content: center; }
 .menu-note { margin-top: 1.8rem; color: var(--muted); font-size: .98rem; text-align: center; }
 .menu-note a { font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
 
@@ -659,6 +660,9 @@ a:hover { text-decoration: underline; text-underline-offset: 3px; }
   z-index: 100;
 }
 .modal-latar[hidden] { display: none; }
+/* Notis + menu penuh mesti timbul atas borang tempahan (yang datang kemudian
+   dalam DOM pada z-index sama), supaya "Lihat Menu Penuh" muncul di hadapan. */
+#menuInfo, #menuPenuh { z-index: 110; }
 .modal-kad {
   position: relative;
   background: var(--surface);
@@ -744,8 +748,8 @@ a:hover { text-decoration: underline; text-underline-offset: 3px; }
   margin-bottom: 0.5rem;
 }
 .menu-sek-kepala img {
-  width: 44px;
-  height: 44px;
+  width: 72px;
+  height: 72px;
   border-radius: 50%;
   object-fit: cover;
   flex: none;
