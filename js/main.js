@@ -13,7 +13,7 @@
       "hero.eyebrow": "River Front, Kemaman",
       "hero.title": "Cabin Rose Station",
       "hero.sub": "Corndog panas, nasi buttermilk dan western klasik di tepi Sungai Kemaman. Buka setiap hari sampai 11 malam.",
-      "hero.cta1": "Tempah di WhatsApp",
+      "hero.cta1": "Tempah Sekarang",
       "hero.cta2": "Lihat Menu",
       "bar.daily": "Buka setiap hari",
       "bar.dailyHours": "11:00 pagi - 11:00 malam",
@@ -58,13 +58,20 @@
       "foot.rights": "Hak cipta terpelihara.",
       "menu.viewBtn": "Lihat Menu Penuh",
       "menu.info.title": "Sebelum lihat menu",
-      "menu.info.body": "Menu dan harga mungkin berubah dari semasa ke semasa. Sila hubungi kami untuk pastikan item yang anda mahu tersedia sebelum datang.",
-      "menu.info.contact": "Hubungi di WhatsApp",
+      "menu.info.body": "Sila pastikan semula ketersediaan menu dengan krew kami.",
       "menu.info.proceed": "Teruskan ke Menu",
       "menu.full.title": "Menu Penuh",
       "menu.full.note": "Harga mungkin berubah. Hubungi kami untuk pengesahan item & harga terkini.",
       "menu.full.hot": "Panas",
-      "menu.full.cold": "Sejuk"
+      "menu.full.cold": "Sejuk",
+      "book.title": "Tempah Meja",
+      "book.body": "Isi maklumat di bawah. Kami akan buka WhatsApp dengan mesej yang telah siap untuk anda hantar.",
+      "book.name": "Nama",
+      "book.date": "Tarikh",
+      "book.time": "Masa",
+      "book.pax": "Bilangan orang",
+      "book.notes": "Catatan (pilihan)",
+      "book.submit": "Hantar ke WhatsApp"
     },
     en: {
       "nav.menu": "Menu",
@@ -74,7 +81,7 @@
       "hero.eyebrow": "River Front, Kemaman",
       "hero.title": "Cabin Rose Station",
       "hero.sub": "Hot corndogs, buttermilk rice and western classics by the Kemaman river. Open daily until 11 PM.",
-      "hero.cta1": "Book on WhatsApp",
+      "hero.cta1": "Book Now",
       "hero.cta2": "View Menu",
       "bar.daily": "Open daily",
       "bar.dailyHours": "11:00 AM - 11:00 PM",
@@ -119,13 +126,20 @@
       "foot.rights": "All rights reserved.",
       "menu.viewBtn": "View Full Menu",
       "menu.info.title": "Before you view the menu",
-      "menu.info.body": "Menu and prices may change from time to time. Please contact us to confirm the item you want is available before you visit.",
-      "menu.info.contact": "Contact us on WhatsApp",
+      "menu.info.body": "Please double confirm the availability of menu with our crew.",
       "menu.info.proceed": "Proceed to Menu",
       "menu.full.title": "Full Menu",
       "menu.full.note": "Prices may change. Contact us to confirm current items & prices.",
       "menu.full.hot": "Hot",
-      "menu.full.cold": "Cold"
+      "menu.full.cold": "Cold",
+      "book.title": "Book a Table",
+      "book.body": "Fill in your details below. We'll open WhatsApp with a ready-made message for you to send.",
+      "book.name": "Name",
+      "book.date": "Date",
+      "book.time": "Time",
+      "book.pax": "Number of guests",
+      "book.notes": "Notes (optional)",
+      "book.submit": "Send via WhatsApp"
     }
   };
 
@@ -420,6 +434,54 @@
     });
     document.addEventListener("keydown", function (e) {
       if (e.key === "Escape") tutupSemua();
+    });
+  }
+
+  /* ---------- Borang tempahan -> hantar ke WhatsApp ---------- */
+  var bookingModal = document.getElementById("bookingModal");
+  var bookingForm = document.getElementById("bookingForm");
+  var bookTriggers = document.querySelectorAll(".js-book-now");
+  if (bookingModal && bookingForm && bookTriggers.length) {
+    var closeBooking = function () { bookingModal.hidden = true; };
+
+    bookTriggers.forEach(function (btn) {
+      btn.addEventListener("click", function () { bookingModal.hidden = false; });
+    });
+    document.getElementById("bookingClose").addEventListener("click", closeBooking);
+    bookingModal.addEventListener("click", function (e) {
+      if (e.target === bookingModal) closeBooking();
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && !bookingModal.hidden) closeBooking();
+    });
+
+    bookingForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var data = new FormData(bookingForm);
+      var name = String(data.get("name") || "").trim();
+      var date = String(data.get("date") || "");
+      var time = String(data.get("time") || "");
+      var pax = String(data.get("pax") || "");
+      var notes = String(data.get("notes") || "").trim();
+      var lang = document.documentElement.lang === "ms" ? "ms" : "en";
+
+      var msg = lang === "ms"
+        ? "Hai Cabin Rose Station, saya nak tempah meja.\n" +
+          "Nama: " + name + "\n" +
+          "Tarikh: " + date + "\n" +
+          "Masa: " + time + "\n" +
+          "Bilangan orang: " + pax +
+          (notes ? "\nCatatan: " + notes : "")
+        : "Hi Cabin Rose Station, I'd like to book a table.\n" +
+          "Name: " + name + "\n" +
+          "Date: " + date + "\n" +
+          "Time: " + time + "\n" +
+          "Pax: " + pax +
+          (notes ? "\nNotes: " + notes : "");
+
+      window.open("https://wa.me/60139642739?text=" + encodeURIComponent(msg), "_blank", "noopener");
+      bookingForm.reset();
+      closeBooking();
     });
   }
 })();

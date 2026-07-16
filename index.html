@@ -8,6 +8,9 @@
 <meta property="og:title" content="Cabin Rose Station | Cafe &amp; Western Food Terbaik di Kemaman">
 <meta property="og:description" content="Mencari western food terbaik di Kemaman? Nikmati cheesy corndog, buttermilk chicken, kopi premium &amp; dessert di Cabin Rose Station River Front.">
 <meta property="og:type" content="website">
+<meta property="og:url" content="https://cabinrose.my/">
+<meta property="og:image" content="https://cabinrose.my/img/logo.jpg">
+<link rel="canonical" href="https://cabinrose.my/">
 <link rel="icon" href="img/logo.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,6 +22,8 @@
   "@context": "https://schema.org",
   "@type": "Restaurant",
   "name": "Cabin Rose Station",
+  "url": "https://cabinrose.my/",
+  "image": "https://cabinrose.my/img/logo.jpg",
   "servesCuisine": ["Western", "Cafe"],
   "foundingDate": "2019",
   "priceRange": "$$",
@@ -55,9 +60,9 @@
     </nav>
     <div class="head-actions">
       <button class="lang-toggle" id="langToggle" aria-label="Tukar bahasa / Switch language">EN</button>
-      <a class="btn btn-primary btn-sm" href="https://wa.me/60139642739?text=Hai%20Cabin%20Rose%20Station%2C%20saya%20nak%20tempah%20meja." target="_blank" rel="noopener">
-        <i class="ph ph-whatsapp-logo" aria-hidden="true"></i><span data-i18n="hero.cta1">Tempah di WhatsApp</span>
-      </a>
+      <button type="button" class="btn btn-book btn-sm js-book-now">
+        <i class="ph ph-whatsapp-logo" aria-hidden="true"></i><span data-i18n="hero.cta1">Tempah Sekarang</span>
+      </button>
       <button class="nav-burger" id="navBurger" aria-label="Buka menu navigasi" aria-expanded="false"><i class="ph ph-list" aria-hidden="true"></i></button>
     </div>
   </div>
@@ -73,9 +78,9 @@
         <h1><span data-i18n="hero.title">Cabin Rose Station</span><span class="rose-icon" aria-hidden="true"></span></h1>
         <p class="lede" data-i18n="hero.sub">Corndog panas, nasi buttermilk dan western klasik di tepi Sungai Kemaman. Buka setiap hari sampai 11 malam.</p>
         <div class="cta-row">
-          <a class="btn btn-primary" href="https://wa.me/60139642739?text=Hai%20Cabin%20Rose%20Station%2C%20saya%20nak%20tempah%20meja." target="_blank" rel="noopener">
-            <i class="ph ph-whatsapp-logo" aria-hidden="true"></i><span data-i18n="hero.cta1">Tempah di WhatsApp</span>
-          </a>
+          <button type="button" class="btn btn-book js-book-now">
+            <i class="ph ph-whatsapp-logo" aria-hidden="true"></i><span data-i18n="hero.cta1">Tempah Sekarang</span>
+          </button>
           <a class="btn btn-ghost" href="#menu" data-i18n="hero.cta2">Lihat Menu</a>
         </div>
       </div>
@@ -152,9 +157,9 @@
       <div>
         <h2 class="reveal" data-i18n="ev.title">Nak sambut birthday atau buat majlis?</h2>
         <p class="reveal" data-i18n="ev.body">Jamuan, birthday party, majlis rasmi dan buffet. Bagitahu tarikh, kami siapkan tempat dan makanan.</p>
-        <a class="btn btn-primary" href="https://wa.me/60139642739?text=Hai%20Cabin%20Rose%20Station%2C%20saya%20nak%20tempah%20meja." target="_blank" rel="noopener">
-          <i class="ph ph-whatsapp-logo" aria-hidden="true"></i><span data-i18n="hero.cta1">Tempah di WhatsApp</span>
-        </a>
+        <button type="button" class="btn btn-book js-book-now">
+          <i class="ph ph-whatsapp-logo" aria-hidden="true"></i><span data-i18n="hero.cta1">Tempah Sekarang</span>
+        </button>
       </div>
       <div class="event-media reveal">
         <img src="img/event.jpg" alt="Susunan meja banquet untuk majlis di Cabin Rose Station" loading="lazy" width="1080" height="1080">
@@ -244,14 +249,11 @@
     </button>
     <i class="ph ph-info" aria-hidden="true" style="font-size:2rem;color:var(--accent)"></i>
     <h3 id="menuInfoTitle" data-i18n="menu.info.title">Sebelum lihat menu</h3>
-    <p data-i18n="menu.info.body">Menu dan harga mungkin berubah dari semasa ke semasa. Sila hubungi kami untuk pastikan item yang anda mahu tersedia sebelum datang.</p>
+    <p data-i18n="menu.info.body">Sila pastikan semula ketersediaan menu dengan krew kami.</p>
     <div class="modal-aksi">
       <button type="button" class="btn btn-primary" id="menuInfoProceed">
         <i class="ph ph-fork-knife" aria-hidden="true"></i><span data-i18n="menu.info.proceed">Teruskan ke Menu</span>
       </button>
-      <a class="btn btn-ghost" href="https://wa.me/60139642739?text=Hai%20Cabin%20Rose%20Station%2C%20saya%20nak%20tanya%20tentang%20menu." target="_blank" rel="noopener">
-        <i class="ph ph-whatsapp-logo" aria-hidden="true"></i><span data-i18n="menu.info.contact">Hubungi di WhatsApp</span>
-      </a>
     </div>
   </div>
 </div>
@@ -266,6 +268,42 @@
     </div>
     <div class="modal-menu-isi" id="menuPenuhIsi"></div>
     <p class="modal-menu-nota" data-i18n="menu.full.note">Harga mungkin berubah. Hubungi kami untuk pengesahan item &amp; harga terkini.</p>
+  </div>
+</div>
+
+<div class="modal-latar" id="bookingModal" hidden>
+  <div class="modal-kad modal-booking" role="dialog" aria-modal="true" aria-labelledby="bookingTitle">
+    <button type="button" class="modal-tutup" id="bookingClose" aria-label="Tutup">
+      <i class="ph ph-x" aria-hidden="true"></i>
+    </button>
+    <i class="ph ph-calendar-check" aria-hidden="true" style="font-size:2rem;color:var(--accent)"></i>
+    <h3 id="bookingTitle" data-i18n="book.title">Tempah Meja</h3>
+    <p data-i18n="book.body">Isi maklumat di bawah. Kami akan buka WhatsApp dengan mesej yang telah siap untuk anda hantar.</p>
+    <form id="bookingForm" class="booking-form">
+      <label>
+        <span data-i18n="book.name">Nama</span>
+        <input type="text" name="name" autocomplete="name" required>
+      </label>
+      <label>
+        <span data-i18n="book.date">Tarikh</span>
+        <input type="date" name="date" required>
+      </label>
+      <label>
+        <span data-i18n="book.time">Masa</span>
+        <input type="time" name="time" required>
+      </label>
+      <label>
+        <span data-i18n="book.pax">Bilangan orang</span>
+        <input type="number" name="pax" min="1" max="100" required>
+      </label>
+      <label>
+        <span data-i18n="book.notes">Catatan (pilihan)</span>
+        <textarea name="notes" rows="2"></textarea>
+      </label>
+      <button type="submit" class="btn btn-book" style="width:100%;justify-content:center">
+        <i class="ph ph-whatsapp-logo" aria-hidden="true"></i><span data-i18n="book.submit">Hantar ke WhatsApp</span>
+      </button>
+    </form>
   </div>
 </div>
 
