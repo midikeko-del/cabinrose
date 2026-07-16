@@ -143,8 +143,21 @@
     }
   };
 
-  var LANG_KEY = "crs-lang";
   var toggle = document.getElementById("langToggle");
+
+  /* Setiap bahasa ada URL sendiri supaya hreflang berfungsi: "/" ialah BM,
+     "/en/" ialah EN. URL yang menentukan bahasa - bukan localStorage. Kalau
+     pilihan tersimpan yang menang, /en/ boleh terpapar dalam BM sedangkan
+     itulah URL yang Google indeks sebagai halaman Inggeris.
+
+     Teks statik sudah betul dalam HTML setiap halaman (en/index.html dijana
+     oleh tools/build-en.php), jadi applyLang hanya perlu untuk kandungan
+     yang dibina oleh JS, iaitu modal menu. */
+  function langFromPath() {
+    return /(^|\/)en(\/|$)/.test(location.pathname) ? "en" : "ms";
+  }
+
+  var currentLang = langFromPath();
 
   function applyLang(lang) {
     var dict = I18N[lang] || I18N.ms;
@@ -152,25 +165,13 @@
       var key = el.getAttribute("data-i18n");
       if (dict[key]) el.innerHTML = dict[key];
     });
-    document.documentElement.lang = lang;
-    if (toggle) toggle.textContent = lang === "ms" ? "EN" : "BM";
-    
-    // Kemas kini tajuk dokumen secara dinamik untuk SEO dwi-bahasa
-    document.title = lang === "ms" 
-      ? "Cabin Rose Station | Cafe & Western Food Terbaik di Kemaman" 
-      : "Cabin Rose Station | Best Cafe & Western Food in Kemaman";
-
-    try { localStorage.setItem(LANG_KEY, lang); } catch (e) { /* storan disekat: abaikan */ }
   }
 
-  var saved = null;
-  try { saved = localStorage.getItem(LANG_KEY); } catch (e) { /* abaikan */ }
-  var currentLang = saved === "ms" ? "ms" : "en";
-  applyLang(currentLang); // Terjemah dengan nilai lalai dahulu (elak flash skrin kosong)
-
   if (toggle) {
+    toggle.textContent = currentLang === "ms" ? "EN" : "BM";
     toggle.addEventListener("click", function () {
-      applyLang(document.documentElement.lang === "ms" ? "en" : "ms");
+      // Relatif supaya berfungsi juga bila laman dihidangkan dari subfolder.
+      location.href = currentLang === "ms" ? "en/" : "../";
     });
   }
 
@@ -412,7 +413,7 @@
   var menuPenuh = document.getElementById("menuPenuh");
   if (menuBtn && menuInfo && menuPenuh) {
     renderMenu(document.getElementById("menuPenuhIsi"));
-    applyLang(document.documentElement.lang || currentLang); // terjemah elemen menu yang baru dirender
+    applyLang(currentLang); // terjemah elemen menu yang baru dirender
 
     var tutupSemua = function () {
       menuInfo.hidden = true;
@@ -463,7 +464,7 @@
       var time = String(data.get("time") || "");
       var pax = String(data.get("pax") || "");
       var notes = String(data.get("notes") || "").trim();
-      var lang = document.documentElement.lang === "ms" ? "ms" : "en";
+      var lang = currentLang;
 
       var msg = lang === "ms"
         ? "Hai Cabin Rose Station, saya nak tempah meja.\n" +
