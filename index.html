@@ -84,8 +84,8 @@
       <a href="#menu" data-i18n="nav.menu">Menu</a>
       <a href="#suasana" data-i18n="nav.ambience">Suasana</a>
       <a href="#ulasan" data-i18n="nav.reviews">Ulasan</a>
-      <a href="#faq" data-i18n="nav.faq">FAQ</a>
       <a href="#lokasi" data-i18n="nav.location">Lokasi</a>
+      <a href="#faq" data-i18n="nav.faq">FAQ</a>
     </nav>
     <div class="head-actions">
       <button class="lang-toggle" id="langToggle" aria-label="Tukar bahasa / Switch language">EN</button>
@@ -171,6 +171,28 @@
     </div>
   </section>
 
+  <!-- GALERI : carousel foto boleh swipe -->
+  <section class="section gallery" id="galeri">
+    <div class="container">
+      <div class="gallery-head reveal">
+        <h2 data-i18n="gal.title">Galeri</h2>
+        <div class="gallery-nav">
+          <button type="button" id="galleryPrev" aria-label="Foto sebelumnya"><i class="ph ph-caret-left" aria-hidden="true"></i></button>
+          <button type="button" id="galleryNext" aria-label="Foto seterusnya"><i class="ph ph-caret-right" aria-hidden="true"></i></button>
+        </div>
+      </div>
+      <div class="gallery-track" id="galleryTrack">
+        <figure class="gallery-slide"><img src="img/corndog.webp" alt="Corndog Cheese Tarik dengan mozarella di Cabin Rose Station" loading="lazy" width="800" height="800"></figure>
+        <figure class="gallery-slide"><img src="img/buttermilk.webp" alt="Nasi Buttermilk Cabin Rose Station" loading="lazy" width="1200" height="896"></figure>
+        <figure class="gallery-slide"><img src="img/chicken_chop.webp" alt="Chicken Chop Grill di Cabin Rose Station" loading="lazy" width="1200" height="896"></figure>
+        <figure class="gallery-slide"><img src="img/drinks.webp" alt="Minuman ais berjenama Cabin Rose Station di atas meja" loading="lazy" width="896" height="1200"></figure>
+        <figure class="gallery-slide"><img src="img/interior.webp" alt="Ruang dalam kafe Cabin Rose Station yang minimalis" loading="lazy" width="896" height="1200"></figure>
+        <figure class="gallery-slide"><img src="img/signage.webp" alt="Papan tanda Cabin Rose Station di laman kafe" loading="lazy" width="800" height="1004"></figure>
+        <figure class="gallery-slide"><img src="img/event.webp" alt="Susunan meja banquet untuk majlis di Cabin Rose Station" loading="lazy" width="900" height="1200"></figure>
+      </div>
+    </div>
+  </section>
+
   <!-- SUASANA : full-bleed imej + teks atas scrim -->
   <section class="ambience" id="suasana">
     <img class="ambience-bg" src="img/interior.webp" alt="" loading="lazy" width="896" height="1200" style="object-position: 50% 90%">
@@ -225,6 +247,31 @@
         </a>
       </div>
       <p class="menu-note reveal"><a href="https://www.google.com/maps/search/?api=1&amp;query=Cabin+Rose+Station+Kemaman" target="_blank" rel="noopener" data-i18n="rev.more">Baca lagi ulasan di Google Maps</a></p>
+    </div>
+  </section>
+
+  <!-- LOKASI : peta penuh + kad info -->
+  <section class="location" id="lokasi">
+    <div class="map-container">
+      <iframe class="map" src="https://maps.google.com/maps?q=Cabin%20Rose%20Station%20Kemaman&amp;z=16&amp;output=embed" title="Peta lokasi Cabin Rose Station" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade"></iframe>
+      <div class="map-overlay" id="mapOverlay">
+        <i class="ph ph-hand-pointing" aria-hidden="true"></i>
+        <span data-i18n="loc.mapClick">Sentuh untuk interaksi peta</span>
+      </div>
+    </div>
+    <div class="container">
+      <div class="loc-card">
+        <h2 data-i18n="loc.title">Cari kami</h2>
+        <p class="loc-addr"><i class="ph ph-map-pin" aria-hidden="true"></i>L-94-G, Jalan Raja Udang 3, River Front Business Centre, 24000 Kemaman, Terengganu</p>
+        <dl class="loc-hours">
+          <div><dt data-i18n="loc.day1">Sabtu - Khamis</dt><dd data-i18n="loc.time1">11:00 pagi - 11:00 malam</dd></div>
+          <div><dt data-i18n="loc.day2">Jumaat</dt><dd data-i18n="loc.time2">3:00 petang - 11:00 malam</dd></div>
+        </dl>
+        <p class="loc-phone"><i class="ph ph-phone" aria-hidden="true"></i><a href="tel:+60139642739" data-i18n="loc.contact">Hubungi Kami</a></p>
+        <a class="btn btn-primary" href="https://www.google.com/maps/dir/?api=1&amp;destination=Cabin+Rose+Station+Kemaman" target="_blank" rel="noopener">
+          <i class="ph ph-navigation-arrow" aria-hidden="true"></i><span data-i18n="loc.cta">Dapatkan Arah</span>
+        </a>
+      </div>
     </div>
   </section>
 
@@ -314,31 +361,6 @@
   }
   </script>
 
-  <!-- LOKASI : peta penuh + kad info -->
-  <section class="location" id="lokasi">
-    <div class="map-container">
-      <iframe class="map" src="https://maps.google.com/maps?q=Cabin%20Rose%20Station%20Kemaman&amp;z=16&amp;output=embed" title="Peta lokasi Cabin Rose Station" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade"></iframe>
-      <div class="map-overlay" id="mapOverlay">
-        <i class="ph ph-hand-pointing" aria-hidden="true"></i>
-        <span data-i18n="loc.mapClick">Sentuh untuk interaksi peta</span>
-      </div>
-    </div>
-    <div class="container">
-      <div class="loc-card">
-        <h2 data-i18n="loc.title">Cari kami</h2>
-        <p class="loc-addr"><i class="ph ph-map-pin" aria-hidden="true"></i>L-94-G, Jalan Raja Udang 3, River Front Business Centre, 24000 Kemaman, Terengganu</p>
-        <dl class="loc-hours">
-          <div><dt data-i18n="loc.day1">Sabtu - Khamis</dt><dd data-i18n="loc.time1">11:00 pagi - 11:00 malam</dd></div>
-          <div><dt data-i18n="loc.day2">Jumaat</dt><dd data-i18n="loc.time2">3:00 petang - 11:00 malam</dd></div>
-        </dl>
-        <p class="loc-phone"><i class="ph ph-phone" aria-hidden="true"></i><a href="tel:+60139642739" data-i18n="loc.contact">Hubungi Kami</a></p>
-        <a class="btn btn-primary" href="https://www.google.com/maps/dir/?api=1&amp;destination=Cabin+Rose+Station+Kemaman" target="_blank" rel="noopener">
-          <i class="ph ph-navigation-arrow" aria-hidden="true"></i><span data-i18n="loc.cta">Dapatkan Arah</span>
-        </a>
-      </div>
-    </div>
-  </section>
-
 </main>
 
 <footer class="site-foot">
@@ -357,6 +379,15 @@
       <a href="https://www.threads.com/@cabinrose_" target="_blank" rel="noopener" aria-label="Threads Cabin Rose Station"><i class="ph ph-threads-logo" aria-hidden="true"></i></a>
       <a href="https://www.tiktok.com/@cabinrose.crstudiocafe" target="_blank" rel="noopener" aria-label="TikTok Cabin Rose Station"><i class="ph ph-tiktok-logo" aria-hidden="true"></i></a>
     </div>
+  </div>
+  <div class="container foot-pay">
+    <span data-i18n="foot.pay">Kami terima</span>
+    <span class="foot-pay-logos">
+      <svg viewBox="0 0 48 32" role="img" aria-label="Visa"><rect width="48" height="32" rx="4" fill="#ffffff" stroke="#e6e6e6"/><text x="24" y="21" font-family="Arial, Helvetica, sans-serif" font-size="12" font-style="italic" font-weight="700" letter-spacing="0.5" text-anchor="middle" fill="#1434CB">VISA</text></svg>
+      <svg viewBox="0 0 48 32" role="img" aria-label="Mastercard"><rect width="48" height="32" rx="4" fill="#ffffff" stroke="#e6e6e6"/><circle cx="20" cy="16" r="8" fill="#EB001B"/><circle cx="28" cy="16" r="8" fill="#F79E1B"/><path d="M24 9.07A8 8 0 0 1 24 22.93A8 8 0 0 1 24 9.07Z" fill="#FF5F00"/></svg>
+      <svg viewBox="0 0 48 32" role="img" aria-label="Kad debit / kredit"><rect width="48" height="32" rx="4" fill="#ffffff" stroke="#e6e6e6"/><rect x="10" y="9" width="28" height="15" rx="2" fill="#2b5a9e"/><rect x="13" y="13" width="6" height="4.5" rx="1" fill="#f5c542"/><rect x="13" y="20" width="18" height="1.6" fill="#ffffff" opacity="0.8"/></svg>
+      <svg viewBox="0 0 48 32" role="img" aria-label="E-wallet"><rect width="48" height="32" rx="4" fill="#ffffff" stroke="#e6e6e6"/><rect x="19" y="7" width="12" height="18" rx="2" fill="#0a9d8e"/><rect x="22" y="10" width="2.5" height="2.5" fill="#ffffff"/><rect x="26" y="10" width="2.5" height="2.5" fill="#ffffff"/><rect x="22" y="14" width="2.5" height="2.5" fill="#ffffff"/><rect x="26" y="14" width="2.5" height="2.5" fill="#ffffff"/><rect x="22" y="20" width="7" height="2" rx="1" fill="#ffffff"/></svg>
+    </span>
   </div>
   <div class="container foot-base">
     <p>&copy; 2026 Cabin Rose Station. <span data-i18n="foot.rights">Hak cipta terpelihara.</span></p>

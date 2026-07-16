@@ -57,6 +57,17 @@ $attrText = [
         => 'Banquet table setup for events at Cabin Rose Station',
     'Papan tanda Cabin Rose Station di laman kafe'
         => 'Cabin Rose Station signage in the cafe yard',
+    'Corndog Cheese Tarik dengan mozarella di Cabin Rose Station'
+        => 'Corndog Cheese Tarik with stretchy mozzarella at Cabin Rose Station',
+    'Nasi Buttermilk Cabin Rose Station'
+        => 'Buttermilk chicken rice at Cabin Rose Station',
+    'Chicken Chop Grill di Cabin Rose Station'
+        => 'Grilled chicken chop at Cabin Rose Station',
+    'Ruang dalam kafe Cabin Rose Station yang minimalis'
+        => 'The minimalist interior of Cabin Rose Station',
+    'aria-label="Foto sebelumnya"' => 'aria-label="Previous photo"',
+    'aria-label="Foto seterusnya"' => 'aria-label="Next photo"',
+    'aria-label="Kad debit / kredit"' => 'aria-label="Debit / credit card"',
     'Logo Cabin Rose Station'   => 'Cabin Rose Station logo',
     'Buka menu navigasi'        => 'Open navigation menu',
     'Peta lokasi Cabin Rose Station' => 'Cabin Rose Station location map',

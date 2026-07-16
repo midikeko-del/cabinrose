@@ -33,6 +33,7 @@
       "menu.i4.desc": "Kopi pekat dan pencuci mulut untuk sesi lepak petang.",
       "menu.note": "Menu penuh dan promosi terkini ada di Instagram kami.",
       "menu.igLink": "Ikuti @cabinrose_",
+      "gal.title": "Galeri",
       "amb.title": "Datang sebab lapar,  <em>stay</em>  sebab best.",
       "amb.body": "Lepak dengan keluarga, pasangan atau satu geng. Ambil kunci anda dan klik peta di bawah.",
       "ev.title": "Nak sambut birthday atau buat majlis?",
@@ -58,6 +59,7 @@
       "loc.contact": "Hubungi Kami",
       "loc.mapClick": "Sentuh untuk interaksi peta",
       "foot.follow": "Ikuti kami",
+      "foot.pay": "Kami terima",
       "foot.tag": "Kafe western di River Front, Kemaman. Sejak 2019.",
       "foot.rights": "Hak cipta terpelihara.",
       "menu.viewBtn": "Lihat Menu Penuh",
@@ -121,6 +123,7 @@
       "menu.i4.desc": "Good coffee and desserts for slow evenings.",
       "menu.note": "Full menu and latest promos on our Instagram.",
       "menu.igLink": "Follow @cabinrose_",
+      "gal.title": "Gallery",
       "amb.title": "Come hungry,  <em>stay</em>  for the vibes.",
       "amb.body": "Hang out with family, your partner or the whole gang. Grab your keys and click the map below.",
       "ev.title": "Birthday or an event coming up?",
@@ -146,6 +149,7 @@
       "loc.contact": "Contact Us",
       "loc.mapClick": "Tap to interact with map",
       "foot.follow": "Follow us",
+      "foot.pay": "We accept",
       "foot.tag": "A western cafe at River Front, Kemaman. Since 2019.",
       "foot.rights": "All rights reserved.",
       "menu.viewBtn": "View Full Menu",
@@ -486,6 +490,20 @@
     document.addEventListener("keydown", function (e) {
       if (e.key === "Escape") tutupSemua();
     });
+  }
+
+  /* ---------- Galeri carousel: butang anak panah ---------- */
+  var galleryTrack = document.getElementById("galleryTrack");
+  if (galleryTrack) {
+    var galStep = function () {
+      var s = galleryTrack.querySelector(".gallery-slide");
+      // Satu slaid + jurang (gap 1rem = 16px); swipe/scroll natif untuk sentuh.
+      return s ? s.getBoundingClientRect().width + 16 : galleryTrack.clientWidth * 0.8;
+    };
+    var galPrev = document.getElementById("galleryPrev");
+    var galNext = document.getElementById("galleryNext");
+    if (galPrev) galPrev.addEventListener("click", function () { galleryTrack.scrollBy({ left: -galStep(), behavior: "smooth" }); });
+    if (galNext) galNext.addEventListener("click", function () { galleryTrack.scrollBy({ left: galStep(), behavior: "smooth" }); });
   }
 
   /* ---------- Borang tempahan -> hantar ke WhatsApp ---------- */
