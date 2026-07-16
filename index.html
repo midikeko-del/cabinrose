@@ -9,13 +9,22 @@
 <meta property="og:description" content="Mencari western food terbaik di Kemaman? Nikmati cheesy corndog, buttermilk chicken, kopi premium &amp; dessert di Cabin Rose Station River Front.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://cabinrose.my/">
-<meta property="og:image" content="https://cabinrose.my/img/logo.jpg">
+<meta property="og:image" content="https://cabinrose.my/img/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Hidangan western di Cabin Rose Station, Kemaman">
+<meta property="og:site_name" content="Cabin Rose Station">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="canonical" href="https://cabinrose.my/">
 <link rel="icon" href="img/logo.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://unpkg.com" crossorigin>
+<!-- Latar hero ialah imej LCP; ia dirujuk dari CSS jadi pelayar hanya menemuinya
+     lewat. Preload memulakan muat turun serentak dengan CSS. -->
+<link rel="preload" as="image" href="img/hero_food.webp" fetchpriority="high">
 <link href="https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1" defer></script>
 <link rel="stylesheet" href="css/style.css">
 <script type="application/ld+json">
 {
@@ -23,10 +32,13 @@
   "@type": "Restaurant",
   "name": "Cabin Rose Station",
   "url": "https://cabinrose.my/",
-  "image": "https://cabinrose.my/img/logo.jpg",
+  "image": "https://cabinrose.my/img/og-image.jpg",
+  "logo": "https://cabinrose.my/img/logo.jpg",
   "servesCuisine": ["Western", "Cafe"],
   "foundingDate": "2019",
   "priceRange": "$$",
+  "acceptsReservations": true,
+  "hasMenu": "https://cabinrose.my/#menu",
   "telephone": "+60139642739",
   "address": {
     "@type": "PostalAddress",
@@ -110,21 +122,21 @@
           <p data-i18n="menu.i1.desc">Rangup di luar, cheese melt di dalam. Sebab utama orang datang semula.</p>
         </article>
         <article class="cell reveal">
-          <img src="img/buttermilk.jpg" alt="Buttermilk Chicken Rice Cabin Rose Station" loading="lazy" width="640" height="480">
+          <img src="img/buttermilk.webp" alt="Buttermilk Chicken Rice Cabin Rose Station" loading="lazy" width="1200" height="896">
           <div class="cell-body">
             <h3 data-i18n="menu.i2.name">Nasi Buttermilk</h3>
             <p data-i18n="menu.i2.desc">Ayam crispy bersalut sos buttermilk yang lemak dan manis.</p>
           </div>
         </article>
         <article class="cell reveal">
-          <img src="img/chicken_chop.jpg" alt="Chicken Chop &amp; Grill Cabin Rose Station" loading="lazy" width="640" height="480">
+          <img src="img/chicken_chop.webp" alt="Chicken Chop &amp; Grill Cabin Rose Station" loading="lazy" width="1200" height="896">
           <div class="cell-body">
             <h3 data-i18n="menu.i3.name">Chicken Chop &amp; Grill</h3>
             <p data-i18n="menu.i3.desc">Western klasik, dimasak segar dengan sos homemade.</p>
           </div>
         </article>
         <article class="cell cell-wide reveal">
-          <img src="img/drinks.jpg" alt="Minuman ais berjenama Cabin Rose Station di atas meja" loading="lazy" width="378" height="504">
+          <img src="img/drinks.webp" alt="Minuman ais berjenama Cabin Rose Station di atas meja" loading="lazy" width="896" height="1200">
           <div class="cell-body">
             <h3 data-i18n="menu.i4.name">Kopi &amp; Dessert</h3>
             <p data-i18n="menu.i4.desc">Kopi pekat dan pencuci mulut untuk sesi lepak petang.</p>
@@ -144,7 +156,7 @@
 
   <!-- SUASANA : full-bleed imej + teks atas scrim -->
   <section class="ambience" id="suasana">
-    <img class="ambience-bg" src="img/interior.jpg" alt="" loading="lazy" width="928" height="1280" style="object-position: 50% 90%">
+    <img class="ambience-bg" src="img/interior.webp" alt="" loading="lazy" width="896" height="1200" style="object-position: 50% 90%">
     <div class="container ambience-copy">
       <h2 class="reveal" data-i18n="amb.title">Datang sebab lapar,  <em>stay</em>  sebab best.</h2>
       <p class="reveal" data-i18n="amb.body">Lepak dengan keluarga, pasangan atau satu geng. Ambil kunci anda dan klik peta di bawah.</p>
@@ -162,7 +174,7 @@
         </button>
       </div>
       <div class="event-media reveal">
-        <img src="img/event.jpg" alt="Susunan meja banquet untuk majlis di Cabin Rose Station" loading="lazy" width="1080" height="1080">
+        <img src="img/event.webp" alt="Susunan meja banquet untuk majlis di Cabin Rose Station" loading="lazy" width="900" height="1200">
       </div>
     </div>
   </section>
@@ -187,7 +199,7 @@
           </figure>
         </div>
         <figure class="quote-media reveal">
-          <img src="img/signage.jpg" alt="Papan tanda Cabin Rose Station di laman kafe" loading="lazy" width="1015" height="1280">
+          <img src="img/signage.webp" alt="Papan tanda Cabin Rose Station di laman kafe" loading="lazy" width="800" height="1004">
         </figure>
       </div>
       <p class="menu-note reveal"><a href="https://www.google.com/maps/search/?api=1&amp;query=Cabin+Rose+Station+Kemaman" target="_blank" rel="noopener" data-i18n="rev.more">Baca lagi ulasan di Google Maps</a></p>
