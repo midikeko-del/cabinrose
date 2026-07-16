@@ -88,8 +88,11 @@ Perkara yang perlu diketahui:
 
 ## Fakta perniagaan (sah Julai 2026)
 
-- **Halal: bersijil JAKIM** — kata kunci carian utama, ada dalam title, meta
-  description dan FAQ. Jangan buang.
+- **TIADA sijil halal JAKIM.** Perniagaan **tidak** memegang pensijilan halal
+  JAKIM (owner sahkan Julai 2026). **Jangan sekali-kali** dakwa "bersijil halal
+  JAKIM" / "JAKIM halal certified" atau melabel "halal" — di Malaysia itu
+  kesalahan di bawah Akta Perihal Dagangan. Isyarat benar & dibenarkan:
+  **"dimiliki dan diuruskan oleh Muslim Bumiputera"**.
 - Alamat: L-94-G, Jalan Raja Udang 3, River Front Business Centre, 24000 Kemaman
 - Tel / WhatsApp: **013-964 2739**
 - Waktu: Sabtu–Khamis 11:00–23:00 · Jumaat 15:00–23:00
