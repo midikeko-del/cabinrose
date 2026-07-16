@@ -67,26 +67,26 @@ foreach ($attrText as $ms => $en) {
 }
 
 /* ---------- 4. Kepala halaman ---------- */
-$titleEn = 'Cabin Rose Station | First-Choice Halal Western Cafe in Kemaman';
-$descEn  = 'Halal western cafe in Kemaman. Cheesy corndogs, buttermilk rice, premium '
-         . 'coffee &amp; desserts at Cabin Rose Station River Front. JAKIM halal certified, '
+$titleEn = 'Cabin Rose Station | First-Choice Western Cafe in Kemaman';
+$descEn  = 'Western cafe in Kemaman. Cheesy corndogs, buttermilk rice, premium '
+         . 'coffee &amp; desserts at Cabin Rose Station River Front. Muslim Bumiputera-owned, '
          . 'open daily until 11 PM.';
-$ogDescEn = 'Halal western cafe in Kemaman. Cheesy corndogs, buttermilk rice, premium '
-          . 'coffee &amp; desserts at Cabin Rose Station River Front. JAKIM halal certified.';
+$ogDescEn = 'Western cafe in Kemaman. Cheesy corndogs, buttermilk rice, premium '
+          . 'coffee &amp; desserts at Cabin Rose Station River Front. Muslim Bumiputera-owned.';
 
 $head = [
     '<html lang="ms">' => '<html lang="en">',
 
-    '<title>Cabin Rose Station | Cafe Western Halal Pilihan Pertama di Kemaman</title>'
+    '<title>Cabin Rose Station | Cafe Western Pilihan Pertama di Kemaman</title>'
         => "<title>$titleEn</title>",
 
-    '<meta name="description" content="Kafe western halal di Kemaman. Cheesy corndog, nasi buttermilk, kopi premium &amp; dessert di Cabin Rose Station River Front. Bersijil halal JAKIM, buka setiap hari sampai 11 malam.">'
+    '<meta name="description" content="Kafe western di Kemaman. Cheesy corndog, nasi buttermilk, kopi premium &amp; dessert di Cabin Rose Station River Front. Milik Muslim Bumiputera, buka setiap hari sampai 11 malam.">'
         => "<meta name=\"description\" content=\"$descEn\">",
 
-    '<meta property="og:title" content="Cabin Rose Station | Cafe Western Halal Pilihan Pertama di Kemaman">'
+    '<meta property="og:title" content="Cabin Rose Station | Cafe Western Pilihan Pertama di Kemaman">'
         => "<meta property=\"og:title\" content=\"$titleEn\">",
 
-    '<meta property="og:description" content="Kafe western halal di Kemaman. Cheesy corndog, nasi buttermilk, kopi premium &amp; dessert di Cabin Rose Station River Front. Bersijil halal JAKIM.">'
+    '<meta property="og:description" content="Kafe western di Kemaman. Cheesy corndog, nasi buttermilk, kopi premium &amp; dessert di Cabin Rose Station River Front. Milik Muslim Bumiputera.">'
         => "<meta property=\"og:description\" content=\"$ogDescEn\">",
 
     '<meta property="og:image:alt" content="Hidangan western di Cabin Rose Station, Kemaman">'
@@ -184,7 +184,7 @@ printf("ditulis                 : en/index.html (%.1f KB)\n", filesize($outFile)
 // Semakan waras: tiada teks BM ketara tertinggal
 $leftover = [];
 foreach (['Tempah Sekarang', 'Lihat Menu', 'Buka setiap hari', 'Kata pengunjung',
-          'Cari kami', 'Hak cipta', 'Soalan lazim', 'memegang sijil halal',
+          'Cari kami', 'Hak cipta', 'Soalan lazim', 'diuruskan oleh Muslim',
           'Kami buka setiap hari'] as $t) {
     if (strpos($html, $t) !== false) $leftover[] = $t;
 }
