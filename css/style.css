@@ -780,7 +780,8 @@ a:hover { text-decoration: underline; text-underline-offset: 3px; }
 .modal-menu-kepala .modal-tutup { position: static; }
 .modal-menu-isi {
   overflow-y: auto;
-  padding: 0.5rem 1.5rem 1rem;
+  padding: 0;
+  -webkit-overflow-scrolling: touch;
 }
 .modal-menu-nota {
   margin: 0;
@@ -790,44 +791,17 @@ a:hover { text-decoration: underline; text-underline-offset: 3px; }
   font-size: 0.85rem;
   text-align: center;
 }
-.menu-sek { margin-top: 1.4rem; }
-.menu-sek-kepala {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  margin-bottom: 0.5rem;
+/* Poster menu penuh: imej bertindan, boleh skrol menegak. Penuh-lebar
+   (full-bleed) supaya poster nampak seperti buku menu berterusan. */
+.menu-page {
+  display: block;
+  width: 100%;
+  height: auto;
 }
-.menu-sek-kepala img {
-  width: 72px;
-  height: 72px;
-  border-radius: 50%;
-  object-fit: cover;
-  flex: none;
-}
-.menu-sek-kepala h4 {
-  margin: 0;
-  font-size: 1.05rem;
-  color: var(--accent);
-  flex: 1;
-}
-.menu-sek-hc { color: var(--muted); font-size: 0.8rem; white-space: nowrap; }
-.menu-sek ul { list-style: none; margin: 0; padding: 0; }
-.menu-sek li {
-  display: flex;
-  align-items: baseline;
-  gap: 0.7rem;
-  padding: 0.45rem 0;
-  border-bottom: 1px dashed var(--line);
-  font-size: 0.95rem;
-}
-.menu-sek li:last-child { border-bottom: 0; }
-.menu-kod { color: var(--muted); font-size: 0.78rem; flex: none; min-width: 4.6em; }
-.menu-nama { flex: 1; }
-.menu-harga { font-weight: 600; white-space: nowrap; }
+.menu-page + .menu-page { margin-top: 6px; }
 
 @media (max-width: 560px) {
   .modal-latar { padding: 12px; }
   .modal-menu { max-height: 92vh; }
-  .modal-menu-kepala, .modal-menu-isi, .modal-menu-nota { padding-left: 1rem; padding-right: 1rem; }
-  .menu-kod { display: none; }
+  .modal-menu-kepala, .modal-menu-nota { padding-left: 1rem; padding-right: 1rem; }
 }

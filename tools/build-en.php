@@ -81,6 +81,9 @@ $attrText = [
         => 'Colourful fruit drinks at Cabin Rose Station',
     'Waffle dan corndog bertongkat di Cabin Rose Station'
         => 'Waffle and corndog on a stick at Cabin Rose Station',
+    // Satu entri meliputi 15 poster menu — nombor muka surat dikekalkan.
+    'Menu Cabin Rose Station, muka surat'
+        => 'Cabin Rose Station menu, page',
     'aria-label="Foto sebelumnya"' => 'aria-label="Previous photo"',
     'aria-label="Foto seterusnya"' => 'aria-label="Next photo"',
     'aria-label="Kad debit / kredit"' => 'aria-label="Debit / credit card"',

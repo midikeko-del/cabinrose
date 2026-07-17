@@ -52,6 +52,24 @@ $jobs = [
     "dessert.jpg"      => [200, 82, "dessert-menu.webp"],
     "food.jpg"         => [200, 82, "food-menu.webp"],
     "drinks.png"       => [200, 82, "drinks-menu.webp"],
+    // Poster menu penuh (15 muka) dipapar bertindan dalam modal "Menu Penuh".
+    // Modal maks 720px lebar; 1200px master beri teks tajam pada retina.
+    // Sumber & output dalam subfolder img/menu/.
+    "menu/page-01.jpg" => [1200, 80, "menu/page-01.webp"],
+    "menu/page-02.jpg" => [1200, 80, "menu/page-02.webp"],
+    "menu/page-03.jpg" => [1200, 80, "menu/page-03.webp"],
+    "menu/page-04.jpg" => [1200, 80, "menu/page-04.webp"],
+    "menu/page-05.jpg" => [1200, 80, "menu/page-05.webp"],
+    "menu/page-06.jpg" => [1200, 80, "menu/page-06.webp"],
+    "menu/page-07.jpg" => [1200, 80, "menu/page-07.webp"],
+    "menu/page-08.jpg" => [1200, 80, "menu/page-08.webp"],
+    "menu/page-09.jpg" => [1200, 80, "menu/page-09.webp"],
+    "menu/page-10.jpg" => [1200, 80, "menu/page-10.webp"],
+    "menu/page-11.jpg" => [1200, 80, "menu/page-11.webp"],
+    "menu/page-12.jpg" => [1200, 80, "menu/page-12.webp"],
+    "menu/page-13.jpg" => [1200, 80, "menu/page-13.webp"],
+    "menu/page-14.jpg" => [1200, 80, "menu/page-14.webp"],
+    "menu/page-15.jpg" => [1200, 80, "menu/page-15.webp"],
 ];
 
 /* ---------- Semakan awal: nama output bertindih ---------- */

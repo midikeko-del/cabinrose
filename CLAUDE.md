@@ -82,7 +82,11 @@ Perkara yang perlu diketahui:
 - `hero_food.webp` ialah **elemen LCP**. Ia dirujuk dari CSS, jadi pelayar hanya
   menemuinya lewat — sebab itu ia di-`preload` dengan `fetchpriority="high"`
   dalam `<head>`. Kekalkan.
-- Imej modal menu (`*-menu.webp`, 200px) dipapar sebagai bulatan 44px sahaja.
+- Menu penuh kini poster imej: `img/menu/page-01…15.webp` (master JPG di
+  `img/menu/`), dipapar bertindan penuh-lebar & boleh skrol dalam modal
+  `#menuPenuh`. Tukar menu = ganti poster, jalankan `towebp.php`, kemas kini FAQ.
+- Imej bulatan lama (`dessert-menu.webp` / `food-menu.webp` / `drinks-menu.webp`)
+  kini **yatim** sejak menu terjana kod dibuang — boleh padam atau guna semula.
 
 ---
 
@@ -100,8 +104,10 @@ Perkara yang perlu diketahui:
 - Google Search Console: disahkan melalui `google40ff26ddefb29d20.html` di root.
   **Jangan padam fail itu** — verifikasi akan gugur.
 
-Harga dalam FAQ diambil daripada data `MENU` sebenar dalam `js/main.js`. Kalau
-harga berubah, kemas kini kedua-duanya supaya kekal jujur.
+Harga dalam FAQ mesti sepadan dengan menu sebenar. Sumber menu kini ialah
+**poster imej** di `img/menu/page-01…15.webp` (bukan lagi data `MENU` terjana
+kod — dibuang Julai 2026). Kalau harga berubah, ganti poster **dan** kemas kini
+teks harga dalam FAQ (`faq.a6`/`faq.a7`) supaya kekal jujur.
 
 ---
 
