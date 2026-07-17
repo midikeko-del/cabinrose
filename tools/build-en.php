@@ -65,6 +65,22 @@ $attrText = [
         => 'Grilled chicken chop at Cabin Rose Station',
     'Ruang dalam kafe Cabin Rose Station yang minimalis'
         => 'The minimalist interior of Cabin Rose Station',
+    'Bangunan hadapan Cabin Rose Station di River Front Kemaman pada waktu siang'
+        => "Cabin Rose Station's daytime storefront at River Front, Kemaman",
+    'Burger ayam rangup dengan kentang goreng di Cabin Rose Station'
+        => 'Crispy chicken burger with fries at Cabin Rose Station',
+    'Iga panggang dengan nasi goreng di Cabin Rose Station'
+        => 'Grilled ribs with fried rice at Cabin Rose Station',
+    'Ayam panggang dengan mash dan coleslaw di Cabin Rose Station'
+        => 'Grilled chicken with mash and coleslaw at Cabin Rose Station',
+    'Pasta krim dengan ayam panggang di Cabin Rose Station'
+        => 'Creamy pasta with grilled chicken at Cabin Rose Station',
+    'Kopi ais berjenama Cabin Rose Station'
+        => 'Branded iced coffee at Cabin Rose Station',
+    'Minuman buah-buahan berwarna-warni di Cabin Rose Station'
+        => 'Colourful fruit drinks at Cabin Rose Station',
+    'Waffle dan corndog bertongkat di Cabin Rose Station'
+        => 'Waffle and corndog on a stick at Cabin Rose Station',
     'aria-label="Foto sebelumnya"' => 'aria-label="Previous photo"',
     'aria-label="Foto seterusnya"' => 'aria-label="Next photo"',
     'aria-label="Kad debit / kredit"' => 'aria-label="Debit / credit card"',

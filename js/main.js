@@ -536,13 +536,22 @@
       // Bila scroll masuk zon klon, lompat sejauh satu set ke slaid sepadan
       // dalam set asal. Kandungan identik jadi lompatan tak kelihatan. Tunggu
       // scroll reda (~120ms) supaya momentum sentuh iOS tak terputus.
+      //
+      // Toleransi WAJIB di sini: scroll-snap-align:center merehatkan slaid
+      // pada (offsetLeft + lebar/2 - lebar-viewport/2), bukan pada offsetLeft
+      // semata-mata. Untuk galeri lebar (viewport > lebar satu slaid), ini
+      // boleh terlepas sempadan setWidth/2*setWidth sebanyak >100px walaupun
+      // rehat TEPAT pada slaid sebenar pertama/terakhir — tanpa toleransi,
+      // rehat yang sah tersalah anggap sebagai "masih dalam zon klon" dan
+      // dilonjak sekali lagi secara silap (disahkan lonjakan hantu semasa uji).
       var settleTimer = null;
       var normalize = function () {
         recalc();
+        var tol = galStep(); // satu langkah slaid - lebih besar dari bunyi snap, kekal lebih kecil dari satu set
         var x = galleryTrack.scrollLeft;
-        if (x < setWidth) {
+        if (x < setWidth - tol) {
           jumpTo(x + setWidth);
-        } else if (x >= setWidth * 2) {
+        } else if (x >= setWidth * 2 + tol) {
           jumpTo(x - setWidth);
         }
       };

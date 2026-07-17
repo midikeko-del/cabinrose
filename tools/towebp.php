@@ -38,6 +38,16 @@ $jobs = [
     "interior.jpg"     => [null, 82, "interior.webp"],
     "signage.jpg"      => [800, 82, "signage.webp"],       // dipapar ~550px lebar
     "event.jpg"        => [900, 82, "event.webp"],         // dipapar ~550px lebar
+    // Galeri baru (Julai 2026) - slaid dipapar maks 340px lebar (CSS),
+    // 900px master beri margin retina yang cukup.
+    "storefront.jpg"      => [900, 82, "storefront.webp"],
+    "burger.jpg"           => [900, 82, "burger.webp"],
+    "grilled_ribs.jpg"     => [900, 82, "grilled_ribs.webp"],
+    "grilled_chicken.jpg"  => [900, 82, "grilled_chicken.webp"],
+    "chicken_pasta.jpg"    => [900, 82, "chicken_pasta.webp"],
+    "iced_coffee.jpg"      => [900, 82, "iced_coffee.webp"],
+    "fruit_drinks.jpg"     => [900, 82, "fruit_drinks.webp"],
+    "waffle_corndog.jpg"   => [900, 82, "waffle_corndog.webp"],
     // Tiga ini hanya muncul sebagai bulatan 44px dalam modal menu.
     "dessert.jpg"      => [200, 82, "dessert-menu.webp"],
     "food.jpg"         => [200, 82, "food-menu.webp"],
