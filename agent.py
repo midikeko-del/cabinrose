@@ -56,6 +56,43 @@ DUP_DISTANCE = 10      # jarak Hamming dHash <= ini = duplikat -> skip
 JPG_QUALITY = 92       # master
 WEBP_QUALITY = 82      # dihidangkan
 
+# Kapsyen alt lalai untuk gambar automasi (tiada AI kapsyen - CV tak faham
+# kandungan). Sengaja NEUTRAL: gambar mungkin makanan, dalaman, atau bangunan,
+# jadi elak dakwaan "makanan" yang boleh silap. Dipilih deterministik ikut
+# hash imej dan tak berulang dalam satu larian, supaya beberapa gambar yang
+# lulus serentak tak berkongsi alt yang sama. Perelok manual dalam
+# img/gallery.json bila-bila masa jika mahu lebih spesifik.
+CAPTIONS = [
+    ("Suasana di Cabin Rose Station, kafe western di Kemaman",
+     "The scene at Cabin Rose Station, a western cafe in Kemaman"),
+    ("Sajian dan suasana terkini di Cabin Rose Station",
+     "The latest food and atmosphere at Cabin Rose Station"),
+    ("Sudut santai di Cabin Rose Station, Kemaman",
+     "A cosy corner at Cabin Rose Station, Kemaman"),
+    ("Detik terbaru di Cabin Rose Station",
+     "A recent moment at Cabin Rose Station"),
+    ("Tarikan terkini di Cabin Rose Station, River Front Kemaman",
+     "The latest from Cabin Rose Station, River Front Kemaman"),
+    ("Pengalaman santai di Cabin Rose Station",
+     "The laid-back experience at Cabin Rose Station"),
+    ("Kunjungan ke Cabin Rose Station, Kemaman",
+     "A visit to Cabin Rose Station, Kemaman"),
+    ("Cabin Rose Station, kafe western pilihan di Kemaman",
+     "Cabin Rose Station, a favourite western cafe in Kemaman"),
+]
+
+
+def pick_caption(seed: int, used: set[int]) -> tuple[str, str]:
+    """Pilih kapsyen deterministik ikut hash; elak ulangan dalam satu larian."""
+    n = len(CAPTIONS)
+    start = seed % n
+    for i in range(n):
+        idx = (start + i) % n
+        if idx not in used:
+            used.add(idx)
+            return CAPTIONS[idx]
+    return CAPTIONS[start]  # lebih gambar daripada kapsyen (jarang; > MAX_BATCH)
+
 
 # ---------------------------------------------------------------- Telegram --
 
@@ -211,8 +248,8 @@ def mode_publish() -> None:
                 pass
 
     published, rejected = [], []
+    used_captions: set[int] = set()
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-    monthyear = datetime.now(timezone.utc).strftime("%B %Y")
     AUTO_DIR.mkdir(parents=True, exist_ok=True)
 
     for path in batch:
@@ -242,13 +279,12 @@ def mode_publish() -> None:
         out.save(AUTO_DIR / f"{base}.jpg", quality=JPG_QUALITY)
         out.save(AUTO_DIR / f"{base}.webp", quality=WEBP_QUALITY)
 
+        alt_ms, alt_en = pick_caption(h, used_captions)
         entry = {
             "src": f"img/auto/{base}.webp",
             "w": out.width, "h": out.height,
-            # Tiada AI untuk kapsyen - alt generik; boleh diperelok manual
-            # dalam img/gallery.json bila-bila masa.
-            "altMs": f"Hidangan dan suasana terkini di Cabin Rose Station ({monthyear})",
-            "altEn": f"Latest food and vibes at Cabin Rose Station ({monthyear})",
+            "altMs": alt_ms,
+            "altEn": alt_en,
             "added": today,
         }
         if pos:
