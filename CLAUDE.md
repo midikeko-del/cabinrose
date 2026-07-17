@@ -142,6 +142,51 @@ imej dengan `fetch()` + `new Image()` decode.
 
 ---
 
+## Galeri: manifest-driven — jangan sunting blok AUTO-GALLERY
+
+Slaid galeri dalam `index.html` (antara `<!-- AUTO-GALLERY:START -->` dan
+`<!-- AUTO-GALLERY:END -->`) DIJANA daripada `img/gallery.json`:
+
+```bash
+php tools/build-gallery.php    # gallery.json -> blok galeri index.html
+php tools/build-en.php         # WAJIB selepas itu
+```
+
+- Susunan manifest = susunan paparan; **terbaru di DEPAN**. Had **30** imej —
+  lebihan di hujung (paling lama) digugurkan dari paparan (fail tidak dipadam).
+- Terjemahan alt EN datang dari medan `altEn` manifest — `build-en.php` membaca
+  manifest, jadi jangan tambah alt galeri ke `$attrText` lagi.
+- `pos` (object-position CSS) menentukan crop dalam kotak 340×260 — gambar
+  menegak dari telefon selalunya perlukan `center 70%`/`center bottom` supaya
+  subjek tak terpotong.
+
+## Automasi galeri Telegram (GitHub Actions + agent.py)
+
+Owner pos gambar dalam group Telegram → laman auto kemas kini mingguan.
+Satu ejen Python (`agent.py`), satu workflow (`.github/workflows/weekly-agent.yml`)
+dengan dua jadual — mod dipilih ikut `github.event.schedule`:
+
+- **fetch (harian 01:00 MYT)** — `python agent.py fetch` kutip gambar group ke
+  `incoming/` (commit). Harian kerana getUpdates Telegram hanya simpan ~24 jam.
+  Offset dalam `state/telegram-offset.txt`.
+- **publish (mingguan Ahad 00:00 MYT)** — `python agent.py publish`:
+  `incoming/` kosong → skip senyap (tiada commit, tiada notifikasi). Kalau ada,
+  5 TERBARU ditapis **computer vision percuma** (tiada API berbayar):
+  kabur (varians Laplacian; teruk → tolak, sikit → sharpen), duplikat (dHash
+  lawan galeri sedia ada → skip), auto-center (pusat tenaga Sobel → medan
+  `pos` manifest). Lulus → proses (900px, unsharp, sedikit kontras — resipi
+  sama galeri) ke `img/auto/`, masuk depan manifest, kemudian workflow jalankan
+  `build-gallery.php` + `build-en.php` (PHP masa BUILD sahaja — Pages hidang
+  statik), commit+push, notifikasi ringkasan ke group Telegram
+  (`state/last-run.txt`).
+- Secrets repo diperlukan: `TELEGRAM_TOKEN`, `TELEGRAM_CHAT_ID` sahaja.
+  Bot mesti dalam group dengan privacy mode dimatikan (@BotFather /setprivacy).
+- CV tak faham kandungan (tak boleh beza screenshot/gambar peribadi dari
+  makanan) — hanya kabur/duplikat/crop. Kalau gambar tak sesuai terlepas,
+  `git revert` commit auto itu dan padam entri manifest + fail `img/auto/`.
+- Alt text automasi adalah generik; boleh diperelok manual dalam
+  `img/gallery.json` bila-bila masa (jalankan semula build-gallery + build-en).
+
 ## Struktur
 
 ```
@@ -150,8 +195,16 @@ en/index.html           TERJANA — jangan sunting
 css/style.css           Semua gaya
 js/main.js              i18n, nav, reveal, modal menu, borang tempahan
 img/                    *.jpg/png = master · *.webp = dihidangkan
+img/gallery.json        Manifest galeri (susunan, alt, pos) — sumber tunggal
+img/auto/               Imej galeri dari automasi Telegram
+incoming/               Gambar Telegram menunggu penerbitan mingguan
+state/                  Offset Telegram + ringkasan larian automasi
+agent.py                Ejen galeri: fetch Telegram + penapisan CV + manifest
+requirements.txt        Dependencies Python untuk agent.py
 tools/build-en.php      Jana en/index.html
+tools/build-gallery.php Jana blok galeri daripada gallery.json
 tools/towebp.php        Jana WebP + og-image
+.github/workflows/      weekly-agent.yml (fetch harian + publish mingguan)
 sitemap.xml             Kedua-dua URL + alternates hreflang
 CNAME                   cabinrose.my
 .nojekyll               Matikan pemprosesan Jekyll
@@ -161,6 +214,8 @@ google40ff…html         Verifikasi Search Console — jangan padam
 ## Senarai semak sebelum commit
 
 1. Ubah `index.html` / `js/main.js`?  → `php tools/build-en.php`
-2. Tambah atau ganti imej?           → `php tools/towebp.php`
-3. Tambah URL baru?                  → kemas kini `sitemap.xml` + hreflang
-4. Uji **kedua-dua** `/` dan `/en/`
+2. Ubah galeri?                       → edit `img/gallery.json` →
+   `php tools/build-gallery.php` → `php tools/build-en.php`
+3. Tambah atau ganti imej?           → `php tools/towebp.php`
+4. Tambah URL baru?                  → kemas kini `sitemap.xml` + hreflang
+5. Uji **kedua-dua** `/` dan `/en/`

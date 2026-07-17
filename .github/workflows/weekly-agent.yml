@@ -1,0 +1,114 @@
+# Ejen galeri automatik (agent.py) - satu workflow, dua jadual:
+#
+#   fetch  (HARIAN 01:00 MYT)  - kutip gambar baru dari group Telegram ke
+#          incoming/. Harian kerana Telegram getUpdates hanya simpan ~24 jam.
+#   publish (MINGGUAN Ahad 00:00 MYT) - 5 gambar terbaru ditapis computer
+#          vision (kabur/duplikat/auto-center - percuma, tiada API berbayar),
+#          masuk depan galeri (FIFO had 30), HTML dijana semula, push
+#          (GitHub Pages auto-deploy), notifikasi ke group Telegram.
+#          incoming/ kosong -> skip senyap, tiada notifikasi.
+#
+# PHP di sini jalan MASA BUILD sahaja (jana index.html + en/index.html
+# statik) - GitHub Pages hanya menghidang fail statik itu.
+#
+# Secrets diperlukan: TELEGRAM_TOKEN, TELEGRAM_CHAT_ID
+# Bot mesti ahli group dan privacy mode dimatikan (@BotFather /setprivacy).
+
+name: Weekly gallery agent
+
+on:
+  schedule:
+    - cron: "0 17 * * *" # fetch: 17:00 UTC = 01:00 MYT setiap hari
+    - cron: "0 16 * * 6" # publish: Sabtu 16:00 UTC = Ahad 00:00 MYT
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Mod larian"
+        type: choice
+        options: [fetch, publish]
+        required: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gallery-repo-writes
+  cancel-in-progress: false
+
+jobs:
+  agent:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Tentukan mod
+        id: mode
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            MODE="${{ inputs.mode }}"
+          elif [ "${{ github.event.schedule }}" = "0 16 * * 6" ]; then
+            MODE="publish"
+          else
+            MODE="fetch"
+          fi
+          echo "mode=$MODE" >> "$GITHUB_OUTPUT"
+          echo "Mod: $MODE"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - name: Jalankan ejen
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python agent.py ${{ steps.mode.outputs.mode }}
+
+      - name: Pasang PHP (untuk jana HTML statik)
+        if: steps.mode.outputs.mode == 'publish'
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          extensions: gd
+
+      - name: Jana semula HTML galeri (BM + EN)
+        if: steps.mode.outputs.mode == 'publish'
+        run: |
+          php tools/build-gallery.php
+          php tools/build-en.php
+
+      - name: Commit & push (jika ada perubahan)
+        id: commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "tiada perubahan"
+          else
+            if [ "${{ steps.mode.outputs.mode }}" = "publish" ]; then
+              git commit -m "feat(auto): kemas kini galeri mingguan dari Telegram"
+            else
+              git commit -m "chore(auto): kutip gambar Telegram harian"
+            fi
+            git pull --rebase origin main
+            git push origin main
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Notifikasi Telegram
+        if: steps.mode.outputs.mode == 'publish' && steps.commit.outputs.changed == 'true'
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          SUMMARY=$(cat state/last-run.txt)
+          curl -sS -X POST "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage" \
+            --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
+            --data-urlencode "text=${SUMMARY}
+
+Lihat: https://cabinrose.my/#galeri"

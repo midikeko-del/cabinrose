@@ -1,0 +1,7 @@
+# Dependencies untuk agent.py (ejen galeri automatik).
+# opencv-python-headless: versi tanpa GUI - lebih ringan & stabil dalam CI.
+# requests: panggilan Bot API Telegram terus (getUpdates/getFile) - lebih
+#           ringkas daripada python-telegram-bot untuk polling mudah begini.
+opencv-python-headless>=4.9
+Pillow>=10.0
+requests>=2.31

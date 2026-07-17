@@ -50,37 +50,10 @@ $html = preg_replace_callback(
 
 /* ---------- 3. Teks dalam atribut (alt / aria-label / title) ---------- */
 // Tidak boleh diambil dari kamus kerana ia bukan kandungan elemen.
+// Alt galeri TIDAK lagi disenaraikan di sini - ia datang dari img/gallery.json
+// (altMs => altEn), jadi imej galeri automatik turut diterjemah tanpa sunting
+// fail ini.
 $attrText = [
-    'Minuman ais berjenama Cabin Rose Station di atas meja'
-        => 'Branded iced drinks on a table at Cabin Rose Station',
-    'Susunan meja banquet untuk majlis di Cabin Rose Station'
-        => 'Banquet table setup for events at Cabin Rose Station',
-    'Papan tanda Cabin Rose Station di laman kafe'
-        => 'Cabin Rose Station signage in the cafe yard',
-    'Corndog Cheese Tarik dengan mozarella di Cabin Rose Station'
-        => 'Corndog Cheese Tarik with stretchy mozzarella at Cabin Rose Station',
-    'Nasi Buttermilk Cabin Rose Station'
-        => 'Buttermilk chicken rice at Cabin Rose Station',
-    'Chicken Chop Grill di Cabin Rose Station'
-        => 'Grilled chicken chop at Cabin Rose Station',
-    'Ruang dalam kafe Cabin Rose Station yang minimalis'
-        => 'The minimalist interior of Cabin Rose Station',
-    'Bangunan hadapan Cabin Rose Station di River Front Kemaman pada waktu siang'
-        => "Cabin Rose Station's daytime storefront at River Front, Kemaman",
-    'Burger ayam rangup dengan kentang goreng di Cabin Rose Station'
-        => 'Crispy chicken burger with fries at Cabin Rose Station',
-    'Iga panggang dengan nasi goreng di Cabin Rose Station'
-        => 'Grilled ribs with fried rice at Cabin Rose Station',
-    'Ayam panggang dengan mash dan coleslaw di Cabin Rose Station'
-        => 'Grilled chicken with mash and coleslaw at Cabin Rose Station',
-    'Pasta krim dengan ayam panggang di Cabin Rose Station'
-        => 'Creamy pasta with grilled chicken at Cabin Rose Station',
-    'Kopi ais berjenama Cabin Rose Station'
-        => 'Branded iced coffee at Cabin Rose Station',
-    'Minuman buah-buahan berwarna-warni di Cabin Rose Station'
-        => 'Colourful fruit drinks at Cabin Rose Station',
-    'Waffle dan corndog bertongkat di Cabin Rose Station'
-        => 'Waffle and corndog on a stick at Cabin Rose Station',
     // Satu entri meliputi 15 poster menu — nombor muka surat dikekalkan.
     'Menu Cabin Rose Station, muka surat'
         => 'Cabin Rose Station menu, page',
@@ -92,6 +65,19 @@ $attrText = [
     'Peta lokasi Cabin Rose Station' => 'Cabin Rose Station location map',
     'aria-label="Tutup"'        => 'aria-label="Close"',
 ];
+
+// Alt galeri daripada manifest (lihat tools/build-gallery.php).
+$galeri = json_decode(file_get_contents("$root/img/gallery.json"), true);
+if ($galeri === null) {
+    fwrite(STDERR, "RALAT: img/gallery.json bukan JSON sah\n");
+    exit(1);
+}
+foreach ($galeri["images"] as $g) {
+    if (isset($g["altMs"], $g["altEn"]) && $g["altMs"] !== "") {
+        $attrText[$g["altMs"]] = $g["altEn"];
+    }
+}
+
 foreach ($attrText as $ms => $en) {
     $html = str_replace($ms, $en, $html);
 }
