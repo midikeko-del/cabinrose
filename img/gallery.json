@@ -3,6 +3,31 @@
     "maxImages": 30,
     "images": [
         {
+            "src": "img/auto/tg-20260717-AQADaBBrG38t0FZ-.webp",
+            "w": 900,
+            "h": 900,
+            "altMs": "Pengalaman santai di Cabin Rose Station",
+            "altEn": "The laid-back experience at Cabin Rose Station",
+            "added": "2026-07-17"
+        },
+        {
+            "src": "img/auto/tg-20260717-AQADZxBrG38t0FZ-.webp",
+            "w": 900,
+            "h": 1200,
+            "altMs": "Suasana di Cabin Rose Station, kafe western di Kemaman",
+            "altEn": "The scene at Cabin Rose Station, a western cafe in Kemaman",
+            "added": "2026-07-17"
+        },
+        {
+            "src": "img/auto/tg-20260717-AQADZhBrG38t0FZ9.webp",
+            "w": 602,
+            "h": 800,
+            "altMs": "Kunjungan ke Cabin Rose Station, Kemaman",
+            "altEn": "A visit to Cabin Rose Station, Kemaman",
+            "added": "2026-07-17",
+            "pos": "center 61%"
+        },
+        {
             "src": "img/auto/tg-20260717-AQADYhBrG38t0FZ-.webp",
             "w": 720,
             "h": 1280,
