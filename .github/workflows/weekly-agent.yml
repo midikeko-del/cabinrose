@@ -106,9 +106,7 @@ jobs:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
-          SUMMARY=$(cat state/last-run.txt)
+          TEXT="$(printf '%s\n\nLihat: https://cabinrose.my/#galeri' "$(cat state/last-run.txt)")"
           curl -sS -X POST "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage" \
             --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
-            --data-urlencode "text=${SUMMARY}
-
-Lihat: https://cabinrose.my/#galeri"
+            --data-urlencode "text=${TEXT}"
