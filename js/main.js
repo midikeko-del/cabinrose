@@ -492,9 +492,67 @@
     });
   }
 
-  /* ---------- Galeri carousel: butang anak panah ---------- */
+  /* ---------- Galeri carousel: gelung tak berkesudahan + butang ---------- */
   var galleryTrack = document.getElementById("galleryTrack");
   if (galleryTrack) {
+    var galSlides = Array.prototype.slice.call(galleryTrack.querySelectorAll(".gallery-slide"));
+    var setWidth = 0;
+
+    if (galSlides.length > 1) {
+      // Klon satu set slaid di setiap hujung supaya swipe/klik boleh "pusing"
+      // tanpa nampak tepi kosong (punca "bug hujung" yang lama). Susun jadi
+      // tiga set: [klon][asal][klon]; pelawat sentiasa duduk pada set tengah.
+      // Klon aria-hidden — kandungan pendua, bukan untuk pembaca skrin/indeks.
+      var firstReal = galSlides[0];
+      galSlides.forEach(function (s) {
+        var after = s.cloneNode(true);
+        after.setAttribute("aria-hidden", "true");
+        galleryTrack.appendChild(after);
+      });
+      galSlides.forEach(function (s) {
+        var before = s.cloneNode(true);
+        before.setAttribute("aria-hidden", "true");
+        galleryTrack.insertBefore(before, firstReal);
+      });
+
+      // Lebar figura ditetapkan oleh CSS (bukan saiz imej), jadi scrollWidth
+      // stabil walaupun imej lazy belum dimuat. Tiga set identik -> /3.
+      var recalc = function () { setWidth = galleryTrack.scrollWidth / 3; };
+
+      // Lompat SERTA-MERTA (tanpa animasi). .gallery-track ada
+      // scroll-behavior:smooth dalam CSS — kalau tak dimatikan buat sekejap,
+      // lompatan gelung akan beranimasi merentas slaid dan pelawat nampak
+      // galeri "scroll balik". Kita mahu lompatan tak kelihatan.
+      var jumpTo = function (x) {
+        var prev = galleryTrack.style.scrollBehavior;
+        galleryTrack.style.scrollBehavior = "auto";
+        galleryTrack.scrollLeft = x;
+        galleryTrack.style.scrollBehavior = prev;
+      };
+
+      recalc();
+      jumpTo(setWidth); // mula pada set asal (tengah)
+
+      // Bila scroll masuk zon klon, lompat sejauh satu set ke slaid sepadan
+      // dalam set asal. Kandungan identik jadi lompatan tak kelihatan. Tunggu
+      // scroll reda (~120ms) supaya momentum sentuh iOS tak terputus.
+      var settleTimer = null;
+      var normalize = function () {
+        recalc();
+        var x = galleryTrack.scrollLeft;
+        if (x < setWidth) {
+          jumpTo(x + setWidth);
+        } else if (x >= setWidth * 2) {
+          jumpTo(x - setWidth);
+        }
+      };
+      galleryTrack.addEventListener("scroll", function () {
+        if (settleTimer) clearTimeout(settleTimer);
+        settleTimer = setTimeout(normalize, 120);
+      }, { passive: true });
+      window.addEventListener("resize", recalc);
+    }
+
     var galStep = function () {
       var s = galleryTrack.querySelector(".gallery-slide");
       // Satu slaid + jurang (gap 1rem = 16px); swipe/scroll natif untuk sentuh.
