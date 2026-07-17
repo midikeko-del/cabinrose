@@ -93,7 +93,7 @@ Perkara yang perlu diketahui:
   JAKIM" / "JAKIM halal certified" atau melabel "halal" — di Malaysia itu
   kesalahan di bawah Akta Perihal Dagangan. Isyarat benar & dibenarkan:
   **"dimiliki dan diuruskan oleh Muslim Bumiputera"**.
-- Alamat: L-94-G, Jalan Raja Udang 3, River Front Business Centre, 24000 Kemaman
+- Alamat: L 94-1, Jalan Raja Udang 3, River Front, 24000 Kemaman
 - Tel / WhatsApp: **013-964 2739**
 - Waktu: Sabtu–Khamis 11:00–23:00 · Jumaat 15:00–23:00
 - Koordinat (dalam schema `geo`): **4.217934, 103.422286**
