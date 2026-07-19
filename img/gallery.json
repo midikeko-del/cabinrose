@@ -3,6 +3,55 @@
     "maxImages": 30,
     "images": [
         {
+            "src": "img/auto/tg-20260719-AQADIcoxG5dooVV-.webp",
+            "w": 900,
+            "h": 1200,
+            "altMs": "Tarikan terkini di Cabin Rose Station, River Front Kemaman",
+            "altEn": "The latest from Cabin Rose Station, River Front Kemaman",
+            "added": "2026-07-19"
+        },
+        {
+            "src": "img/auto/tg-20260719-AQAD6r8xG0eBCVZ-.webp",
+            "w": 900,
+            "h": 675,
+            "altMs": "Pengalaman santai di Cabin Rose Station",
+            "altEn": "The laid-back experience at Cabin Rose Station",
+            "added": "2026-07-19"
+        },
+        {
+            "src": "img/auto/tg-20260719-AQAD6b8xG0eBCVZ-.webp",
+            "w": 900,
+            "h": 675,
+            "altMs": "Kunjungan ke Cabin Rose Station, Kemaman",
+            "altEn": "A visit to Cabin Rose Station, Kemaman",
+            "added": "2026-07-19"
+        },
+        {
+            "src": "img/auto/tg-20260719-AQAD6L8xG0eBCVZ-.webp",
+            "w": 900,
+            "h": 675,
+            "altMs": "Detik terbaru di Cabin Rose Station",
+            "altEn": "A recent moment at Cabin Rose Station",
+            "added": "2026-07-19"
+        },
+        {
+            "src": "img/auto/tg-20260719-AQAD678xG0eBCVZ-.webp",
+            "w": 900,
+            "h": 675,
+            "altMs": "Cabin Rose Station, kafe western pilihan di Kemaman",
+            "altEn": "Cabin Rose Station, a favourite western cafe in Kemaman",
+            "added": "2026-07-19"
+        },
+        {
+            "src": "img/auto/tg-20260719-AQAD2sYxG-2A4VZ-.webp",
+            "w": 720,
+            "h": 1280,
+            "altMs": "Sudut santai di Cabin Rose Station, Kemaman",
+            "altEn": "A cosy corner at Cabin Rose Station, Kemaman",
+            "added": "2026-07-19",
+            "pos": "center 61%"
+        },
+        {
             "src": "img/auto/tg-20260717-AQAD5cAxG7m_wVd-.webp",
             "w": 900,
             "h": 1200,
