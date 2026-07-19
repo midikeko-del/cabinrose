@@ -1,12 +1,13 @@
 # Ejen galeri + notis automatik (agent.py) - satu workflow, dua jadual:
 #
-#   fetch  (HARIAN 01:00 MYT)  - kutip gambar baru dari group Telegram ke
-#          incoming/. Turut kendali arahan /notis dan /notis off SERTA-MERTA
-#          (bukan tunggu larian mingguan - notis/promosi perlu segera).
-#          Harian kerana Telegram getUpdates hanya simpan ~24 jam.
-#   publish (MINGGUAN Ahad 00:00 MYT) - 5 gambar terbaru ditapis computer
-#          vision (kabur/duplikat/auto-center - percuma, tiada API berbayar),
-#          masuk depan galeri (FIFO had 30). incoming/ kosong -> skip senyap.
+#   fetch  (TIAP 5 MINIT, had minimum GitHub Actions) - kutip gambar baru dari
+#          group Telegram ke incoming/. Turut kendali arahan /notis dan
+#          /notis off SERTA-MERTA (bukan tunggu larian publish - notis/
+#          promosi perlu segera). Telegram getUpdates simpan ~24 jam, jauh
+#          lebih longgar daripada jarak 5 minit ini.
+#   publish (HARIAN 00:00 MYT) - 5 gambar terbaru ditapis computer vision
+#          (kabur/duplikat/auto-center - percuma, tiada API berbayar), masuk
+#          depan galeri (FIFO had 30). incoming/ kosong -> skip senyap.
 #
 # build-notis.php dijalankan pada KEDUA-DUA jadual (bukan setakat bila /notis
 # diterima) supaya notis yang tamat tempoh turut tergugur secara automatik
@@ -22,12 +23,12 @@
 # Secrets diperlukan: TELEGRAM_TOKEN, TELEGRAM_CHAT_ID
 # Bot mesti ahli group dan privacy mode dimatikan (@BotFather /setprivacy).
 
-name: Weekly gallery agent
+name: Gallery agent
 
 on:
   schedule:
-    - cron: "0 17 * * *" # fetch: 17:00 UTC = 01:00 MYT setiap hari
-    - cron: "0 16 * * 6" # publish: Sabtu 16:00 UTC = Ahad 00:00 MYT
+    - cron: "*/5 * * * *" # fetch: setiap 5 minit (had minimum GitHub Actions)
+    - cron: "0 16 * * *" # publish: harian, 16:00 UTC = 00:00 MYT
   workflow_dispatch:
     inputs:
       mode:
@@ -54,7 +55,7 @@ jobs:
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             MODE="${{ inputs.mode }}"
-          elif [ "${{ github.event.schedule }}" = "0 16 * * 6" ]; then
+          elif [ "${{ github.event.schedule }}" = "0 16 * * *" ]; then
             MODE="publish"
           else
             MODE="fetch"
@@ -81,7 +82,7 @@ jobs:
           php-version: "8.3"
           extensions: gd
 
-      - name: Jana semula galeri (mingguan sahaja)
+      - name: Jana semula galeri (larian publish sahaja)
         if: steps.mode.outputs.mode == 'publish'
         run: php tools/build-gallery.php
 
@@ -102,7 +103,7 @@ jobs:
             echo "tiada perubahan"
           else
             if [ "${{ steps.mode.outputs.mode }}" = "publish" ]; then
-              git commit -m "feat(auto): kemas kini galeri mingguan dari Telegram"
+              git commit -m "feat(auto): kemas kini galeri harian dari Telegram"
             else
               git commit -m "chore(auto): kutip gambar Telegram harian"
             fi

@@ -172,14 +172,14 @@ php tools/build-en.php         # WAJIB selepas itu
 
 ## Automasi galeri Telegram (GitHub Actions + agent.py)
 
-Owner pos gambar dalam group Telegram → laman auto kemas kini mingguan.
+Owner pos gambar dalam group Telegram → laman auto kemas kini harian.
 Satu ejen Python (`agent.py`), satu workflow (`.github/workflows/weekly-agent.yml`)
 dengan dua jadual — mod dipilih ikut `github.event.schedule`:
 
-- **fetch (harian 01:00 MYT)** — `python agent.py fetch` kutip gambar group ke
-  `incoming/` (commit). Harian kerana getUpdates Telegram hanya simpan ~24 jam.
+- **fetch (tiap 5 minit, had minimum GitHub Actions)** — `python agent.py fetch`
+  kutip gambar group ke `incoming/` (commit) dan kendali `/notis` serta-merta.
   Offset dalam `state/telegram-offset.txt`.
-- **publish (mingguan Ahad 00:00 MYT)** — `python agent.py publish`:
+- **publish (harian 00:00 MYT)** — `python agent.py publish`:
   `incoming/` kosong → skip senyap (tiada commit, tiada notifikasi). Kalau ada,
   5 TERBARU ditapis **computer vision percuma** (tiada API berbayar):
   kabur (varians Laplacian; teruk → tolak, sikit → sharpen), duplikat (dHash
@@ -209,8 +209,8 @@ Owner hantar **gambar flyer** dalam group Telegram dengan caption:
   tarikh **tamat** — popup hilang automatik selepas itu, owner tak perlu
   buat apa-apa. `/notis off` buang serta-merta sebelum tamat.
 - Dikendali dalam `mode_fetch` (bukan `mode_publish`) — **serta-merta**,
-  tak tunggu larian mingguan, sebab caption dikesan dalam larian **fetch
-  harian** yang sama yang mengutip gambar galeri. Flyer TIDAK melalui
+  tak tunggu larian publish, sebab caption dikesan dalam larian **fetch
+  tiap 5 minit** yang sama yang mengutip gambar galeri. Flyer TIDAK melalui
   penapisan CV galeri (kabur/duplikat/auto-center) — ia grafik reka bentuk
   sengaja, bukan calon galeri.
 - Bot balas TERUS ke group (bukan tunggu notifikasi workflow):
@@ -241,7 +241,7 @@ img/gallery.json        Manifest galeri (susunan, alt, pos) — sumber tunggal
 img/auto/               Imej galeri dari automasi Telegram
 img/notis.json          Manifest popup notis/promosi aktif — sumber tunggal
 img/notis/              Flyer notis dari arahan Telegram /notis
-incoming/               Gambar Telegram menunggu penerbitan mingguan
+incoming/               Gambar Telegram menunggu penerbitan harian
 state/                  Offset Telegram + ringkasan larian automasi
 agent.py                Ejen: fetch Telegram + penapisan CV + notis + manifest
 requirements.txt        Dependencies Python untuk agent.py
@@ -249,7 +249,7 @@ tools/build-en.php      Jana en/index.html
 tools/build-gallery.php Jana blok galeri daripada gallery.json
 tools/build-notis.php   Jana/kosongkan popup notis daripada notis.json
 tools/towebp.php        Jana WebP + og-image
-.github/workflows/      weekly-agent.yml (fetch harian + publish mingguan)
+.github/workflows/      weekly-agent.yml (fetch tiap 5 minit + publish harian)
 sitemap.xml             Kedua-dua URL + alternates hreflang
 CNAME                   cabinrose.my
 .nojekyll               Matikan pemprosesan Jekyll
