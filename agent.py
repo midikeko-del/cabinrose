@@ -469,16 +469,19 @@ def notify_incoming_queue(token: str, chat_id: str, just_saved: str) -> None:
     except (OSError, ValueError) as e:
         print(f"AMARAN: notifikasi giliran gagal ({e}) - dilangkau")
         return
-    icon = {"publish": "✅", "duplicate": "⏭️", "blur": "❌", "ignored": "⏸️"}
+    status = {
+        "publish": "✅ unik — akan terbit",
+        "duplicate": "⏭️ hampir sama dgn gambar sedia ada — akan di-skip",
+        "blur": "❌ kabur — akan di-skip",
+        "ignored": f"⏸️ melebihi {MAX_BATCH} terbaru — tunggu giliran berikut",
+    }
+    mine = next((v for n, v, _ in rows if n == just_saved), "publish")
     n_pub = sum(1 for _, v, _ in rows if v == "publish")
-    lines = [f"📸 Gambar diterima & masuk giliran galeri: {just_saved}",
-             f"Giliran sekarang: {len(rows)} gambar · {n_pub} akan terbit (anggaran):"]
-    for name, verdict, detail in rows:
-        tag = "  ⬅️ baru" if name == just_saved else ""
-        lines.append(f"{icon.get(verdict, '•')} {name} — {detail}{tag}")
-    lines.append("\nTerbit ke galeri automatik pada ~00:00 MYT (larian publish "
-                 "harian). Nak buang mana-mana sebelum itu, cakap je.")
-    tg_send(token, chat_id, "\n".join(lines))
+    tg_send(token, chat_id,
+            f"📸 Gambar diterima: {just_saved}\n"
+            f"Status (anggaran): {status.get(mine, mine)}\n"
+            f"Giliran galeri: {len(rows)} gambar · {n_pub} akan terbit · "
+            f"terbit ~00:00 MYT.")
 
 
 # ------------------------------------------------------------------ Publish --
