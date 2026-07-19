@@ -6,3 +6,7 @@ fix_password.php
 Thumbs.db
 *.pyc
 __pycache__/
+
+# Claude Code local runtime (keep skills tracked, ignore runtime cruft)
+.claude/scheduled_tasks.lock
+.claude/settings.local.json
