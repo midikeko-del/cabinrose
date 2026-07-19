@@ -46,8 +46,15 @@ on:
 permissions:
   contents: write
 
+# Larian webhook mesti TIDAK membatalkan satu sama lain: bila owner hantar album
+# (banyak gambar), Telegram cetus beberapa larian dalam saat yang sama. Satu
+# kumpulan concurrency berkongsi akan buat GitHub batalkan larian "pending" -
+# gambar tercicir. Jadi setiap mesej Telegram dapat kumpulan UNIK (ikut
+# message_id); larian berjadual (fetch/publish/manual) kekal berkongsi satu
+# kumpulan supaya bersiri. Perlumbaan push antara larian selari dikendali oleh
+# gelung cuba-semula dalam langkah commit.
 concurrency:
-  group: gallery-repo-writes
+  group: ${{ github.event_name == 'repository_dispatch' && format('tg-{0}', github.event.client_payload.message.message_id) || 'gallery-repo-writes' }}
   cancel-in-progress: false
 
 jobs:
@@ -118,8 +125,18 @@ jobs:
             else
               git commit -m "chore(auto): kutip gambar Telegram harian"
             fi
-            git pull --rebase origin main
-            git push origin main
+            # Larian webhook album berjalan selari (kumpulan concurrency unik),
+            # jadi push boleh berlumba (non-fast-forward). Cuba semula dgn
+            # rebase supaya tiada gambar tercicir walau beberapa larian serentak.
+            pushed=false
+            for i in 1 2 3 4 5 6; do
+              git pull --rebase origin main && git push origin main && { pushed=true; break; }
+              echo "push cuba $i gagal - rebase & cuba semula..."
+              sleep $((RANDOM % 5 + 2))
+            done
+            if [ "$pushed" != "true" ]; then
+              echo "RALAT: push gagal selepas 6 cubaan"; exit 1
+            fi
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
 
