@@ -228,6 +228,10 @@ Owner hantar **gambar flyer** dalam group Telegram dengan caption:
   Imej flyer papar **penuh tanpa dipotong** (bukan cover-crop macam galeri).
 - Kalau notis tak sesuai terlanjur naik: `/notis off` dari Telegram (segera,
   tak perlu tunggu deploy), atau `git revert` commit berkaitan.
+- `write_notis_active` (`agent.py`) padam fail flyer LAMA (jpg+webp) dari
+  `img/notis/` secara automatik bila digantikan notis baru atau `/notis off`
+  — hanya satu notis aktif pada satu masa, jadi tiada sebab simpan flyer
+  yatim dalam repo.
 
 ## Struktur
 

@@ -147,8 +147,16 @@ def parse_notis_date(token: str) -> str | None:
 
 
 def write_notis_active(entry: dict | None) -> None:
-    """Kemas kini medan 'active' notis.json (kekalkan komen)."""
+    """Kemas kini medan 'active' notis.json (kekalkan komen). Padam flyer
+    lama (jpg+webp) daripada repo bila digantikan/dibuang - jimat ruang,
+    sebab hanya SATU notis aktif pada satu masa (lihat proses_notis)."""
     manifest = json.loads(NOTIS_MANIFEST.read_text(encoding="utf-8"))
+    old = manifest.get("active")
+    if old and old.get("src") and old.get("src") != (entry or {}).get("src"):
+        old_path = ROOT / old["src"]
+        for f in (old_path, old_path.with_suffix(".jpg")):
+            if f.exists():
+                f.unlink()
     manifest["active"] = entry
     NOTIS_MANIFEST.write_text(
         json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
