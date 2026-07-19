@@ -143,6 +143,14 @@ mentah. Beza itu sahaja memecahkan padanan schema yang Google semak.
 **Push ke github.com kerap gagal sementara** (`Failed to connect port 443`)
 walaupun `curl` ke hos sama berjaya. Cuba semula 2–3 kali; biasanya menjadi.
 
+**Jangan kongsi satu kumpulan `concurrency` untuk larian webhook.** Bila owner
+hantar album Telegram, beberapa larian `repository_dispatch` tercetus dalam
+saat yang sama. Kalau semua berkongsi satu kumpulan concurrency, GitHub
+**membatalkan larian "pending"** (walau `cancel-in-progress: false`) — gambar
+tercicir senyap. Sebab itu `weekly-agent.yml` beri setiap mesej Telegram
+kumpulan UNIK (`tg-<message_id>`); larian berjadual sahaja berkongsi kumpulan.
+Larian selari yang terhasil dikendali oleh gelung pull-rebase+push retry.
+
 **Bila menguji dalam browser automasi:** kalau `document.hidden === true`, Chrome
 **tidak melukis**. Akibatnya screenshot kosong/timeout, `loading="lazy"` tak
 pernah muat (`naturalWidth` 0), IntersectionObserver tak cetus jadi `.reveal`

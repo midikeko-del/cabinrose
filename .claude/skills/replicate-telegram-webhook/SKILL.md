@@ -112,6 +112,11 @@ back to polling: `deleteWebhook`.
 Push the workflow to the default branch first (or `repository_dispatch` has
 nothing to trigger). Then send a real command in the group and confirm a
 `repository_dispatch` run appears within ~1 minute and the expected commit
-lands. Watch the concurrency: album posts arrive as separate messages → one run
-each; a `concurrency` group with `cancel-in-progress: false` serialises the
-repo writes so pushes don't race.
+lands. **Concurrency gotcha (learned the hard way):** album posts arrive as
+several messages within the same second → several runs at once. Do NOT put them
+in one shared `concurrency` group — GitHub cancels the *pending* runs (even with
+`cancel-in-progress: false`) and those photos vanish silently. Give each message
+a unique group (`tg-${{ github.event.client_payload.message.message_id }}`) so
+runs never cancel each other, keep a shared group only for scheduled runs, and
+make the push step a `git pull --rebase && git push` retry loop so the
+now-parallel runs don't drop commits on push contention.
