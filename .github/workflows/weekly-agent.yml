@@ -23,7 +23,7 @@
 # Secrets diperlukan: TELEGRAM_TOKEN, TELEGRAM_CHAT_ID
 # Bot mesti ahli group dan privacy mode dimatikan (@BotFather /setprivacy).
 
-name: Gallery agent
+name: Cabin Rose Agent
 
 on:
   schedule:
