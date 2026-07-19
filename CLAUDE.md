@@ -172,13 +172,23 @@ php tools/build-en.php         # WAJIB selepas itu
 
 ## Automasi galeri Telegram (GitHub Actions + agent.py)
 
-Owner pos gambar dalam group Telegram → laman auto kemas kini harian.
+Owner pos gambar dalam group Telegram → laman auto kemas kini.
 Satu ejen Python (`agent.py`), satu workflow (`.github/workflows/weekly-agent.yml`)
-dengan dua jadual — mod dipilih ikut `github.event.schedule`:
+dengan **tiga pencetus** — mod dipilih ikut `github.event_name`/`schedule`:
 
-- **fetch (tiap 5 minit, had minimum GitHub Actions)** — `python agent.py fetch`
-  kutip gambar group ke `incoming/` (commit) dan kendali `/notis` serta-merta.
-  Offset dalam `state/telegram-offset.txt`.
+- **webhook (LALUAN UTAMA, serta-merta)** — `python agent.py webhook`.
+  Cloudflare Worker (`worker/`) terima webhook Telegram bila owner pos gambar
+  atau hantar `/notis`, lalu cetus workflow ini (`repository_dispatch:
+  telegram-update`) dengan mesej dalam `client_payload.message` (dihantar ke
+  ejen sebagai env `TELEGRAM_MESSAGE`). `process_message` proses SATU mesej:
+  `/notis` → popup terus; gambar → `incoming/`. Popup naik ~1 minit, tak tunggu
+  jadual. Pasang: lihat `worker/SETUP.md` (perlu GitHub PAT + akaun Cloudflare,
+  kedua-dua percuma). **Webhook & getUpdates saling eksklusif di Telegram** —
+  sebab itu fetch di bawah kini jaring keselamatan sahaja.
+- **fetch (harian 15:00 UTC, jaring keselamatan)** — `python agent.py fetch`
+  polling getUpdates ke `incoming/` + `/notis`. Bila webhook aktif, getUpdates
+  pulang **409** dan ejen **langkau senyap** (bukan gagal). Offset dalam
+  `state/telegram-offset.txt`.
 - **publish (harian 00:00 MYT)** — `python agent.py publish`:
   `incoming/` kosong → skip senyap (tiada commit, tiada notifikasi). Kalau ada,
   5 TERBARU ditapis **computer vision percuma** (tiada API berbayar):
@@ -191,6 +201,8 @@ dengan dua jadual — mod dipilih ikut `github.event.schedule`:
   (`state/last-run.txt`).
 - Secrets repo diperlukan: `TELEGRAM_TOKEN`, `TELEGRAM_CHAT_ID` sahaja.
   Bot mesti dalam group dengan privacy mode dimatikan (@BotFather /setprivacy).
+  (Worker Cloudflare simpan rahsianya sendiri: GitHub PAT + secret webhook —
+  bukan dalam repo, lihat `worker/SETUP.md`.)
 - CV tak faham kandungan (tak boleh beza screenshot/gambar peribadi dari
   makanan) — hanya kabur/duplikat/crop. Kalau gambar tak sesuai terlepas,
   `git revert` commit auto itu dan padam entri manifest + fail `img/auto/`.
@@ -208,18 +220,19 @@ Owner hantar **gambar flyer** dalam group Telegram dengan caption:
 - Tarikh (terima `D/M/YY`, `D/M/YYYY`, pemisah `/`, `-`, atau `.`) ialah
   tarikh **tamat** — popup hilang automatik selepas itu, owner tak perlu
   buat apa-apa. `/notis off` buang serta-merta sebelum tamat.
-- Dikendali dalam `mode_fetch` (bukan `mode_publish`) — **serta-merta**,
-  tak tunggu larian publish, sebab caption dikesan dalam larian **fetch
-  tiap 5 minit** yang sama yang mengutip gambar galeri. Flyer TIDAK melalui
-  penapisan CV galeri (kabur/duplikat/auto-center) — ia grafik reka bentuk
-  sengaja, bukan calon galeri.
+- Dikendali dalam `process_message` (dipanggil oleh `mode_webhook` DAN
+  `mode_fetch`, bukan `mode_publish`) — **serta-merta**, tak tunggu larian
+  publish. Laluan biasa: webhook Telegram → Worker → `repository_dispatch` →
+  ejen, dalam ~1 minit. Flyer TIDAK melalui penapisan CV galeri
+  (kabur/duplikat/auto-center) — ia grafik reka bentuk sengaja, bukan calon
+  galeri.
 - Bot balas TERUS ke group (bukan tunggu notifikasi workflow):
   kejayaan, atau amaran kalau `/notis` tanpa gambar / tanpa tarikh /
   tarikh tak sah / tarikh dah lepas.
 - Sumber tunggal: `img/notis.json` (medan `active`, `null` = tiada notis).
   `tools/build-notis.php` menyuntik/mengosongkan blok popup dalam
   `index.html` antara `<!-- AUTO-NOTIS:START/END -->`, kemudian **WAJIB**
-  `build-en.php`. Skrip ini dijalankan pada **kedua-dua** jadual (fetch +
+  `build-en.php`. Skrip ini dijalankan pada **setiap** larian (webhook, fetch,
   publish) — sebab itu notis tamat tempoh tergugur automatik dalam masa
   ≤1 hari walaupun tiada arahan Telegram baru (semakan `expiry >= hari-ini`
   berlaku setiap kali dijalankan).
@@ -247,13 +260,14 @@ img/notis.json          Manifest popup notis/promosi aktif — sumber tunggal
 img/notis/              Flyer notis dari arahan Telegram /notis
 incoming/               Gambar Telegram menunggu penerbitan harian
 state/                  Offset Telegram + ringkasan larian automasi
-agent.py                Ejen: fetch Telegram + penapisan CV + notis + manifest
+agent.py                Ejen: webhook/fetch Telegram + penapisan CV + notis + manifest
 requirements.txt        Dependencies Python untuk agent.py
+worker/                 Cloudflare Worker webhook Telegram + panduan (SETUP.md)
 tools/build-en.php      Jana en/index.html
 tools/build-gallery.php Jana blok galeri daripada gallery.json
 tools/build-notis.php   Jana/kosongkan popup notis daripada notis.json
 tools/towebp.php        Jana WebP + og-image
-.github/workflows/      weekly-agent.yml (fetch tiap 5 minit + publish harian)
+.github/workflows/      weekly-agent.yml (webhook + fetch harian + publish harian)
 sitemap.xml             Kedua-dua URL + alternates hreflang
 CNAME                   cabinrose.my
 .nojekyll               Matikan pemprosesan Jekyll

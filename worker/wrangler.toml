@@ -1,0 +1,15 @@
+# Konfigurasi Cloudflare Worker (untuk laluan `wrangler` - lihat SETUP.md).
+# Kalau guna dashboard Cloudflare (klik-klik), fail ini tak diperlukan.
+
+name = "cabinrose-telegram"
+main = "worker.js"
+compatibility_date = "2024-11-01"
+
+# Pemboleh ubah biasa (bukan rahsia).
+[vars]
+GH_OWNER = "midikeko-del"
+GH_REPO = "cabinrose"
+
+# Rahsia (JANGAN letak nilai di sini). Set melalui:
+#   wrangler secret put GH_TOKEN
+#   wrangler secret put TG_WEBHOOK_SECRET

@@ -1,21 +1,25 @@
-# Ejen galeri + notis automatik (agent.py) - satu workflow, dua jadual:
+# Ejen galeri + notis automatik (agent.py) - satu workflow, tiga pencetus:
 #
-#   fetch  (TIAP 5 MINIT, had minimum GitHub Actions) - kutip gambar baru dari
-#          group Telegram ke incoming/. Turut kendali arahan /notis dan
-#          /notis off SERTA-MERTA (bukan tunggu larian publish - notis/
-#          promosi perlu segera). Telegram getUpdates simpan ~24 jam, jauh
-#          lebih longgar daripada jarak 5 minit ini.
-#   publish (HARIAN 00:00 MYT) - 5 gambar terbaru ditapis computer vision
-#          (kabur/duplikat/auto-center - percuma, tiada API berbayar), masuk
-#          depan galeri (FIFO had 30). incoming/ kosong -> skip senyap.
+#   webhook (repository_dispatch: telegram-update) - LALUAN UTAMA & SERTA-MERTA.
+#          Cloudflare Worker terima webhook Telegram bila owner pos gambar /
+#          hantar /notis, lalu cetus workflow ini dengan mesej dalam
+#          client_payload. agent.py webhook proses SATU mesej itu: /notis ->
+#          popup terus, gambar -> incoming/. Popup notis naik dalam ~1 minit
+#          (bukan tunggu jadual). Lihat worker/ untuk kod + panduan pasang.
+#   fetch  (HARIAN 15:00 UTC) - JARING KESELAMATAN sahaja. Polling getUpdates;
+#          jika webhook aktif ia pulang 409 dan agent.py langkau senyap. Guna
+#          bila webhook belum dipasang / Worker tumbang.
+#   publish (HARIAN 16:00 UTC = 00:00 MYT) - 5 gambar terbaru dalam incoming/
+#          ditapis computer vision (kabur/duplikat/auto-center - percuma, tiada
+#          API berbayar), masuk depan galeri (FIFO had 30). Kosong -> skip senyap.
 #
-# build-notis.php dijalankan pada KEDUA-DUA jadual (bukan setakat bila /notis
+# build-notis.php dijalankan pada SETIAP larian (bukan setakat bila /notis
 # diterima) supaya notis yang tamat tempoh turut tergugur secara automatik
 # dalam masa <=1 hari tanpa sebarang arahan Telegram - build ini semak
 # expiry >= hari-ini setiap kali dijalankan.
 #
 # Notifikasi /notis dihantar TERUS oleh agent.py (tg_send dalam handle_notis)
-# sebaik arahan diterima - bukan langkah berasingan dalam workflow ini.
+# sebaik arahan diproses - bukan langkah berasingan dalam workflow ini.
 #
 # PHP di sini jalan MASA BUILD sahaja (jana index.html + en/index.html
 # statik) - GitHub Pages hanya menghidang fail statik itu.
@@ -26,15 +30,17 @@
 name: Cabin Rose Agent
 
 on:
+  repository_dispatch:
+    types: [telegram-update] # webhook Telegram -> Cloudflare Worker -> sini (serta-merta)
   schedule:
-    - cron: "*/5 * * * *" # fetch: setiap 5 minit (had minimum GitHub Actions)
+    - cron: "0 15 * * *" # fetch: harian 15:00 UTC - jaring keselamatan (laluan utama = webhook)
     - cron: "0 16 * * *" # publish: harian, 16:00 UTC = 00:00 MYT
   workflow_dispatch:
     inputs:
       mode:
         description: "Mod larian"
         type: choice
-        options: [fetch, publish]
+        options: [fetch, publish, webhook]
         required: true
 
 permissions:
@@ -55,6 +61,8 @@ jobs:
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             MODE="${{ inputs.mode }}"
+          elif [ "${{ github.event_name }}" = "repository_dispatch" ]; then
+            MODE="webhook"
           elif [ "${{ github.event.schedule }}" = "0 16 * * *" ]; then
             MODE="publish"
           else
@@ -74,6 +82,7 @@ jobs:
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_MESSAGE: ${{ toJSON(github.event.client_payload.message) }}
         run: python agent.py ${{ steps.mode.outputs.mode }}
 
       - name: Pasang PHP (untuk jana HTML statik)
@@ -104,6 +113,8 @@ jobs:
           else
             if [ "${{ steps.mode.outputs.mode }}" = "publish" ]; then
               git commit -m "feat(auto): kemas kini galeri harian dari Telegram"
+            elif [ "${{ steps.mode.outputs.mode }}" = "webhook" ]; then
+              git commit -m "chore(auto): notis/gambar Telegram (webhook serta-merta)"
             else
               git commit -m "chore(auto): kutip gambar Telegram harian"
             fi

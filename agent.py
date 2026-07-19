@@ -240,56 +240,98 @@ def handle_notis(cmd: str, msg: dict, token: str, chat_id: str) -> bool:
     return True
 
 
-def mode_fetch() -> None:
+def process_message(msg: dict, token: str, chat_id: str) -> str:
+    """Proses SATU mesej Telegram - dikongsi oleh mode_fetch (polling) dan
+    mode_webhook (push serta-merta). Arahan /notis dikendali terus; selainnya
+    gambar disimpan ke incoming/ untuk larian publish. Pulang label log ringkas."""
+    if str(msg.get("chat", {}).get("id", "")) != str(chat_id):
+        return "abai (chat lain)"
+
+    # Teks (caption gambar atau mesej biasa) yang bermula /notis - dikendali
+    # berasingan daripada aliran galeri, tak kira ada gambar atau tidak
+    # (handle_notis sendiri balas ralat kalau gambar tiada/tarikh tak sah).
+    text = (msg.get("caption") or msg.get("text") or "").strip()
+    if text.lower().startswith("/notis"):
+        handle_notis(text, msg, token, chat_id)
+        return "notis dikendali"
+
+    if not msg.get("photo"):
+        return "abai (bukan gambar)"
+    photo = msg["photo"][-1]  # saiz terbesar
+    uniq = re.sub(r"[^A-Za-z0-9_-]", "", photo["file_unique_id"])
+    date = datetime.fromtimestamp(int(msg["date"]), tz=timezone.utc).strftime("%Y%m%d")
+    INCOMING.mkdir(exist_ok=True)
+    dest = INCOMING / f"tg-{date}-{uniq}.jpg"
+    if dest.exists():  # dedup harian
+        return f"abai (duplikat {dest.name})"
+    content = download_photo(token, photo)
+    if not content:
+        return f"AMARAN: gagal muat turun {uniq} - dilangkau"
+    dest.write_bytes(content)
+    return f"disimpan {dest.name} ({len(content) / 1024:.0f}KB)"
+
+
+def _require_creds() -> tuple[str, str]:
     import os
 
     token = os.environ.get("TELEGRAM_TOKEN")
     chat_id = os.environ.get("TELEGRAM_CHAT_ID")
     if not token or not chat_id:
         sys.exit("RALAT: TELEGRAM_TOKEN / TELEGRAM_CHAT_ID tiada dalam env")
+    return token, chat_id
+
+
+def mode_fetch() -> None:
+    """Polling getUpdates - kini JARING KESELAMATAN sahaja (laluan utama =
+    webhook, lihat mode_webhook). Bila webhook aktif, getUpdates pulang 409
+    'Conflict' - kita langkau senyap dan biar webhook uruskan."""
+    token, chat_id = _require_creds()
 
     INCOMING.mkdir(exist_ok=True)
     OFFSET_FILE.parent.mkdir(exist_ok=True)
     offset = int(OFFSET_FILE.read_text().strip() or 0) if OFFSET_FILE.exists() else 0
 
-    updates = tg_call(
-        token, "getUpdates",
-        offset=offset + 1, timeout=0, allowed_updates='["message"]',
+    r = requests.get(
+        f"https://api.telegram.org/bot{token}/getUpdates",
+        params={"offset": offset + 1, "timeout": 0,
+                "allowed_updates": '["message"]'},
+        timeout=60,
     )
+    data = r.json()
+    if not data.get("ok"):
+        if data.get("error_code") == 409:
+            print("fetch: webhook aktif - getUpdates dilangkau (guna webhook)")
+            return
+        sys.exit(f"RALAT: getUpdates balas ralat: {str(data)[:300]}")
+    updates = data["result"]
 
     saved, max_id = 0, offset
     for u in updates:
         max_id = max(max_id, int(u["update_id"]))
-        msg = u.get("message") or {}
-        if str(msg.get("chat", {}).get("id", "")) != str(chat_id):
-            continue
-
-        # Teks (caption gambar atau mesej biasa) yang bermula /notis - dikendali
-        # berasingan daripada aliran galeri, tak kira ada gambar atau tidak
-        # (handle_notis sendiri balas ralat kalau gambar tiada/tarikh tak sah).
-        text = (msg.get("caption") or msg.get("text") or "").strip()
-        if text.lower().startswith("/notis"):
-            handle_notis(text, msg, token, chat_id)
-            continue
-
-        if not msg.get("photo"):
-            continue
-        photo = msg["photo"][-1]  # saiz terbesar
-        uniq = re.sub(r"[^A-Za-z0-9_-]", "", photo["file_unique_id"])
-        date = datetime.fromtimestamp(int(msg["date"]), tz=timezone.utc).strftime("%Y%m%d")
-        dest = INCOMING / f"tg-{date}-{uniq}.jpg"
-        if dest.exists():  # dedup harian
-            continue
-        content = download_photo(token, photo)
-        if not content:
-            print(f"AMARAN: gagal muat turun {uniq} - dilangkau")
-            continue
-        dest.write_bytes(content)
-        saved += 1
-        print(f"disimpan: {dest.name} ({len(content) / 1024:.0f}KB)")
+        result = process_message(u.get("message") or {}, token, chat_id)
+        if result.startswith("disimpan"):
+            saved += 1
+        print(result)
 
     OFFSET_FILE.write_text(f"{max_id}\n")
     print(f"selesai: {len(updates)} update disemak, {saved} gambar baru, offset={max_id}")
+
+
+def mode_webhook() -> None:
+    """Proses satu mesej yang ditolak Telegram SERTA-MERTA melalui Cloudflare
+    Worker (repository_dispatch). Mesej dihantar sebagai JSON dalam env
+    TELEGRAM_MESSAGE oleh workflow (github.event.client_payload.message)."""
+    import os
+
+    token, chat_id = _require_creds()
+    raw = (os.environ.get("TELEGRAM_MESSAGE") or "").strip()
+    if not raw or raw == "null":
+        sys.exit("RALAT: TELEGRAM_MESSAGE kosong (tiada client_payload.message)")
+    try:
+        msg = json.loads(raw)
+    except json.JSONDecodeError as e:
+        sys.exit(f"RALAT: TELEGRAM_MESSAGE bukan JSON sah: {e}")
+    print(f"webhook: {process_message(msg, token, chat_id)}")
 
 
 # ---------------------------------------------------------- Computer vision --
@@ -460,5 +502,7 @@ if __name__ == "__main__":
         mode_fetch()
     elif mode == "publish":
         mode_publish()
+    elif mode == "webhook":
+        mode_webhook()
     else:
-        sys.exit("Guna: python agent.py fetch|publish")
+        sys.exit("Guna: python agent.py fetch|publish|webhook")
