@@ -85,13 +85,27 @@
       "faq.a6": "Corndog Cheese Tarik dengan mozarella di dalamnya ialah yang paling laris. Nasi Buttermilk, Chicken Chop Grill serta pizza homemade juga antara pilihan utama pelanggan.",
       "faq.q7": "Berapa julat harga makanan di Cabin Rose Station?",
       "faq.a7": "Minuman bermula dari RM2.00 dan snek dari RM7.90. Kebanyakan set nasi dan hidangan western antara RM18 hingga RM26, manakala menu premium seperti Argentina Ribeye Steak mencecah RM80.00.",
-      "book.title": "Tempah Meja",
+      "book.title": "Tempahan",
       "book.body": "Isi maklumat di bawah. Kami akan buka WhatsApp dengan mesej yang telah siap untuk anda hantar.",
+      "book.chooseType": "Pilih jenis tempahan dahulu:",
+      "book.typeTable": "Meja Kafe",
+      "book.typeEvent": "Event Space (CR Studio)",
+      "book.back": "&larr; Tukar jenis tempahan",
       "book.name": "Nama",
       "book.date": "Tarikh",
       "book.time": "Masa",
       "book.pax": "Bilangan orang",
-      "book.notes": "Catatan (cth: menu yang nak diorder, permintaan khas)",
+      "book.tel": "No. telefon",
+      "book.deco": "Hiasan meja (deco)?",
+      "book.decoNo": "Tidak",
+      "book.decoYes": "Ya",
+      "book.deposit": "Deposit (RM)",
+      "book.depositRule": "Deposit wajib: RM200 untuk 10 pax ke atas · RM500 untuk 50 pax ke atas.",
+      "book.payTo": "Bayar deposit ke:",
+      "book.payTo2": "Bayar deposit ke:",
+      "book.receiptNote": "Sila sertakan resit sebagai bukti pembayaran semasa menghantar mesej WhatsApp.",
+      "book.receiptNote2": "Sila sertakan resit sebagai bukti pembayaran semasa menghantar mesej WhatsApp.",
+      "book.notes": "Order menu / catatan (cth: menu yang nak diorder, permintaan khas)",
       "book.viewMenu": "Lihat Menu Penuh",
       "book.submit": "Hantar ke WhatsApp"
     },
@@ -175,13 +189,27 @@
       "faq.a6": "The Corndog Cheese Tarik with stretchy mozzarella inside is our best seller. Buttermilk Rice, Chicken Chop Grill and our homemade pizzas are also regular favourites.",
       "faq.q7": "What is the price range at Cabin Rose Station?",
       "faq.a7": "Drinks start from RM2.00 and snacks from RM7.90. Most rice sets and western mains fall between RM18 and RM26, while premium items such as the Argentina Ribeye Steak reach RM80.00.",
-      "book.title": "Book a Table",
+      "book.title": "Make a Booking",
       "book.body": "Fill in your details below. We'll open WhatsApp with a ready-made message for you to send.",
+      "book.chooseType": "Choose your booking type first:",
+      "book.typeTable": "Cafe Table",
+      "book.typeEvent": "Event Space (CR Studio)",
+      "book.back": "&larr; Change booking type",
       "book.name": "Name",
       "book.date": "Date",
       "book.time": "Time",
       "book.pax": "Number of guests",
-      "book.notes": "Notes (e.g. items you'd like to order, special requests)",
+      "book.tel": "Phone number",
+      "book.deco": "Table decoration?",
+      "book.decoNo": "No",
+      "book.decoYes": "Yes",
+      "book.deposit": "Deposit (RM)",
+      "book.depositRule": "Deposit required: RM200 for 10 pax and above · RM500 for 50 pax and above.",
+      "book.payTo": "Pay the deposit to:",
+      "book.payTo2": "Pay the deposit to:",
+      "book.receiptNote": "Please attach your payment receipt as proof when sending the WhatsApp message.",
+      "book.receiptNote2": "Please attach your payment receipt as proof when sending the WhatsApp message.",
+      "book.notes": "Menu order / notes (e.g. items you'd like to order, special requests)",
       "book.viewMenu": "View Full Menu",
       "book.submit": "Send via WhatsApp"
     }
@@ -414,7 +442,10 @@
     var closeBooking = function () { bookingModal.hidden = true; };
 
     bookTriggers.forEach(function (btn) {
-      btn.addEventListener("click", function () { bookingModal.hidden = false; });
+      btn.addEventListener("click", function () {
+        resetChoice(); // SOP: setiap bukaan bermula dengan pilihan jenis
+        bookingModal.hidden = false;
+      });
     });
     document.getElementById("bookingClose").addEventListener("click", closeBooking);
     bookingModal.addEventListener("click", function (e) {
@@ -427,32 +458,115 @@
       if (e.key === "Escape" && !bookingModal.hidden && !menuOpen) closeBooking();
     });
 
+    /* Dua jenis tempahan: meja kafe / event space (CR Studio), sebagai DUA
+       SKRIN berasingan (bukan toggle dalam satu borang). SOP: pelanggan
+       WAJIB pilih jenis dahulu (#bookChoice) - borang penuh (dengan medan
+       + kotak deposit khusus jenis itu sahaja) baru dipapar selepas pilih.
+       QR DuitNow milik akaun Cabin Rose Cafe (3817408419) - meja sahaja;
+       event papar nombor akaun tanpa QR. */
+    var bookChoice = document.getElementById("bookChoice");
+    var bookBack = document.getElementById("bookBack");
+    var btnTable = document.getElementById("bookTypeTable");
+    var btnEvent = document.getElementById("bookTypeEvent");
+    var typeInput = bookingForm.querySelector("[name=btype]");
+    var paxInput = bookingForm.querySelector("[name=pax]");
+    var depositInput = bookingForm.querySelector("[name=deposit]");
+    var rowDeco = document.getElementById("bookRowDeco");
+    var boxTable = document.getElementById("depositBoxTable");
+    var boxEvent = document.getElementById("depositBoxEvent");
+
+    // SOP deposit (kedua-dua jenis): 10 pax ke atas RM200, 50 ke atas RM500.
+    var depositRule = function () {
+      var pax = parseInt(paxInput.value, 10) || 0;
+      var min = pax >= 50 ? 500 : pax >= 10 ? 200 : 0;
+      depositInput.required = min > 0;
+      depositInput.min = min;
+      depositInput.placeholder = min > 0 ? "min RM" + min : "";
+    };
+    paxInput.addEventListener("input", depositRule);
+
+    var setType = function (type) {
+      typeInput.value = type;
+      var isEvent = type === "event";
+      bookChoice.hidden = true;      // sorok skrin pilihan
+      bookingForm.hidden = false;    // papar borang jenis yang dipilih sahaja
+      rowDeco.hidden = isEvent;
+      boxTable.hidden = isEvent;
+      boxEvent.hidden = !isEvent;
+      depositRule();
+    };
+    btnTable.addEventListener("click", function () { setType("table"); });
+    btnEvent.addEventListener("click", function () { setType("event"); });
+
+    // Kembali ke skrin pilihan (butang "Tukar jenis" ATAU bukaan modal baru).
+    var resetChoice = function () {
+      bookingForm.hidden = true;
+      bookChoice.hidden = false;
+    };
+    bookBack.addEventListener("click", resetChoice);
+
+    // "19:30" -> "7:30 PM" (borang minta format 12 jam dalam mesej).
+    var fmt12 = function (t) {
+      if (!t) return "";
+      var hm = t.split(":");
+      var h = parseInt(hm[0], 10);
+      var ap = h >= 12 ? "PM" : "AM";
+      h = h % 12 || 12;
+      return h + ":" + hm[1] + " " + ap;
+    };
+
     bookingForm.addEventListener("submit", function (e) {
       e.preventDefault();
       var data = new FormData(bookingForm);
       var name = String(data.get("name") || "").trim();
       var date = String(data.get("date") || "");
-      var time = String(data.get("time") || "");
+      var time = fmt12(String(data.get("time") || ""));
       var pax = String(data.get("pax") || "");
+      var tel = String(data.get("tel") || "").trim();
+      var deco = String(data.get("deco") || "no") === "yes";
+      var deposit = String(data.get("deposit") || "").trim();
       var notes = String(data.get("notes") || "").trim();
       var lang = currentLang;
+      var msg;
 
-      var msg = lang === "ms"
-        ? "Hai Cabin Rose Station, saya nak tempah meja.\n" +
+      if (typeInput.value === "event") {
+        // Format tetap ikut template owner (sama untuk BM/EN - staff kenal).
+        msg =
+          "🔰 BOOKING EVENT CR STUDIO 🔰\n" +
+          "NAME: " + name + "\n" +
+          "DATE & TIME: " + date + ", " + time + "\n" +
+          "PEOPLE: " + pax + "\n" +
+          "NO TELEFON: " + tel + "\n" +
+          "DEPOSIT: RM " + deposit + "\n" +
+          "Order menu: " + (notes || "-") + "\n\n" +
+          "Saya akan sertakan resit deposit sebagai bukti pembayaran.";
+      } else if (lang === "ms") {
+        msg =
+          "Hai Cabin Rose Station, saya nak tempah meja.\n" +
           "Nama: " + name + "\n" +
           "Tarikh: " + date + "\n" +
           "Masa: " + time + "\n" +
-          "Bilangan orang: " + pax +
-          (notes ? "\nCatatan: " + notes : "")
-        : "Hi Cabin Rose Station, I'd like to book a table.\n" +
+          "Bilangan orang: " + pax + "\n" +
+          "No telefon: " + tel + "\n" +
+          "Hiasan meja: " + (deco ? "Ya" : "Tidak") + "\n" +
+          "Deposit meja: " + (deposit ? "RM " + deposit : "-") + "\n" +
+          "Order menu: " + (notes || "-");
+      } else {
+        msg =
+          "Hi Cabin Rose Station, I'd like to book a table.\n" +
           "Name: " + name + "\n" +
           "Date: " + date + "\n" +
           "Time: " + time + "\n" +
-          "Pax: " + pax +
-          (notes ? "\nNotes: " + notes : "");
+          "Pax: " + pax + "\n" +
+          "Tel: " + tel + "\n" +
+          "Decoration table: " + (deco ? "Yes" : "No") + "\n" +
+          "Deposit Table: " + (deposit ? "RM " + deposit : "-") + "\n" +
+          "Order menu: " + (notes || "-");
+      }
 
       window.open("https://wa.me/60139642739?text=" + encodeURIComponent(msg), "_blank", "noopener");
       bookingForm.reset();
+      resetChoice();
       closeBooking();
     });
   }

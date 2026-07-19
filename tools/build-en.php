@@ -60,6 +60,9 @@ $attrText = [
     'aria-label="Foto sebelumnya"' => 'aria-label="Previous photo"',
     'aria-label="Foto seterusnya"' => 'aria-label="Next photo"',
     'aria-label="Kad debit / kredit"' => 'aria-label="Debit / credit card"',
+    'aria-label="Jenis tempahan"' => 'aria-label="Booking type"',
+    'Kod QR DuitNow Cabin Rose Station (Public Bank)'
+        => 'Cabin Rose Station DuitNow QR code (Public Bank)',
     'Logo Cabin Rose Station'   => 'Cabin Rose Station logo',
     'Buka menu navigasi'        => 'Open navigation menu',
     'Peta lokasi Cabin Rose Station' => 'Cabin Rose Station location map',

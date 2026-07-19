@@ -471,9 +471,18 @@
       <i class="ph ph-x" aria-hidden="true"></i>
     </button>
     <i class="ph ph-calendar-check" aria-hidden="true" style="font-size:2rem;color:var(--accent)"></i>
-    <h3 id="bookingTitle" data-i18n="book.title">Tempah Meja</h3>
+    <h3 id="bookingTitle" data-i18n="book.title">Tempahan</h3>
     <p data-i18n="book.body">Isi maklumat di bawah. Kami akan buka WhatsApp dengan mesej yang telah siap untuk anda hantar.</p>
-    <form id="bookingForm" class="booking-form">
+    <div id="bookChoice">
+      <p class="book-choose-label" data-i18n="book.chooseType">Pilih jenis tempahan dahulu:</p>
+      <div class="book-type" role="group" aria-label="Jenis tempahan">
+        <button type="button" class="book-type-btn" id="bookTypeTable" data-i18n="book.typeTable">Meja Kafe</button>
+        <button type="button" class="book-type-btn" id="bookTypeEvent" data-i18n="book.typeEvent">Event Space (CR Studio)</button>
+      </div>
+    </div>
+    <form id="bookingForm" class="booking-form" hidden>
+      <button type="button" class="book-back" id="bookBack" data-i18n="book.back">&larr; Tukar jenis tempahan</button>
+      <input type="hidden" name="btype" value="table">
       <label>
         <span data-i18n="book.name">Nama</span>
         <input type="text" name="name" autocomplete="name" required>
@@ -488,10 +497,37 @@
       </label>
       <label>
         <span data-i18n="book.pax">Bilangan orang</span>
-        <input type="number" name="pax" min="1" max="100" required>
+        <input type="number" name="pax" min="1" max="300" required>
       </label>
       <label>
-        <span data-i18n="book.notes">Catatan (cth: menu yang nak diorder, permintaan khas)</span>
+        <span data-i18n="book.tel">No. telefon</span>
+        <input type="tel" name="tel" autocomplete="tel" required>
+      </label>
+      <label id="bookRowDeco">
+        <span data-i18n="book.deco">Hiasan meja (deco)?</span>
+        <select name="deco">
+          <option value="no" data-i18n="book.decoNo">Tidak</option>
+          <option value="yes" data-i18n="book.decoYes">Ya</option>
+        </select>
+      </label>
+      <label>
+        <span data-i18n="book.deposit">Deposit (RM)</span>
+        <input type="number" name="deposit" min="0" step="10" inputmode="numeric">
+      </label>
+      <p class="deposit-eventnote" data-i18n="book.depositRule">Deposit wajib: RM200 untuk 10 pax ke atas &middot; RM500 untuk 50 pax ke atas.</p>
+      <div class="deposit-box" id="depositBoxTable" hidden>
+        <p class="deposit-box-title" data-i18n="book.payTo">Bayar deposit ke:</p>
+        <p class="deposit-acc">PUBLIC BANK &middot; <strong>3817408419</strong><br>CABIN ROSE STATION ENT</p>
+        <img src="img/qr-duitnow.jpg" alt="Kod QR DuitNow Cabin Rose Station (Public Bank)" width="831" height="1080" loading="lazy">
+        <p class="deposit-receipt" data-i18n="book.receiptNote">Sila sertakan resit sebagai bukti pembayaran semasa menghantar mesej WhatsApp.</p>
+      </div>
+      <div class="deposit-box" id="depositBoxEvent" hidden>
+        <p class="deposit-box-title" data-i18n="book.payTo2">Bayar deposit ke:</p>
+        <p class="deposit-acc">PUBLIC BANK &middot; <strong>3824353114</strong><br>CR STUDIO ENTERPRISE</p>
+        <p class="deposit-receipt" data-i18n="book.receiptNote2">Sila sertakan resit sebagai bukti pembayaran semasa menghantar mesej WhatsApp.</p>
+      </div>
+      <label>
+        <span data-i18n="book.notes">Order menu / catatan (cth: menu yang nak diorder, permintaan khas)</span>
         <textarea name="notes" rows="3"></textarea>
       </label>
       <button type="button" class="btn btn-ghost js-view-menu" style="width:100%;justify-content:center">

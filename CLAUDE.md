@@ -99,6 +99,16 @@ Perkara yang perlu diketahui:
   **"dimiliki dan diuruskan oleh Muslim Bumiputera"**.
 - Alamat: L 94-1, Jalan Raja Udang 3, River Front, 24000 Kemaman
 - Tel / WhatsApp: **013-964 2739**
+- Deposit tempahan (SOP owner Julai 2026, dikuatkuasakan borang tempahan):
+  - Pelanggan WAJIB pilih jenis (meja kafe / event space) dahulu — borang
+    hanya keluar selepas jenis dipilih.
+  - Peraturan deposit KEDUA-DUA jenis ikut pax: **10+ pax → min RM200**,
+    **50+ pax → min RM500**; bawah 10 pax deposit pilihan.
+  - Akaun meja kafe: Public Bank **3817408419** (CABIN ROSE STATION ENT) +
+    QR DuitNow `img/qr-duitnow.jpg`.
+  - Akaun event space: Public Bank **3824353114** (CR STUDIO ENTERPRISE) —
+    nombor akaun sahaja, tiada QR.
+  - Aliran bayaran manual: pelanggan transfer + hantar resit melalui WhatsApp.
 - Waktu: Sabtu–Khamis 11:00–23:00 · Jumaat 15:00–23:00
 - Koordinat (dalam schema `geo`): **4.217934, 103.422286**
 - Google Search Console: disahkan melalui `google40ff26ddefb29d20.html` di root.

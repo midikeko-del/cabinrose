@@ -742,10 +742,17 @@ a:hover { text-decoration: underline; text-underline-offset: 3px; }
 .modal-aksi .btn { width: 100%; justify-content: center; }
 
 /* Modal borang tempahan */
-.modal-booking { max-width: 440px; }
+.modal-booking { max-width: 440px; max-height: 90vh; overflow-y: auto; }
 .booking-form { display: flex; flex-direction: column; gap: 0.9rem; text-align: left; margin-top: 0.4rem; }
 .booking-form label { display: flex; flex-direction: column; gap: 0.35rem; font-size: 0.85rem; color: var(--muted); }
+/* display:flex di atas mengatasi lalai [hidden] - kembalikan supaya
+   baris hiasan meja (mod event) dan seluruh borang (sebelum jenis
+   tempahan dipilih) betul-betul tersembunyi. */
+.booking-form label[hidden] { display: none; }
+.booking-form[hidden] { display: none; }
+.book-choose-label { margin: 0.9rem 0 0; font-size: 0.85rem; color: var(--muted); text-align: center; }
 .booking-form input,
+.booking-form select,
 .booking-form textarea {
   font-family: inherit;
   font-size: 0.95rem;
@@ -757,7 +764,66 @@ a:hover { text-decoration: underline; text-underline-offset: 3px; }
   resize: vertical;
 }
 .booking-form input:focus,
+.booking-form select:focus,
 .booking-form textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+/* Skrin pilihan jenis tempahan (langkah 1) - berasingan daripada borang */
+#bookChoice[hidden] { display: none; }
+.book-type { display: flex; gap: 0.5rem; margin-top: 0.9rem; }
+.book-type-btn {
+  flex: 1;
+  padding: 0.6rem 0.4rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .2s ease, color .2s ease, border-color .2s ease;
+}
+.book-type-btn:hover { border-color: var(--ink); }
+
+/* Butang "Tukar jenis" di puncak borang (langkah 2) */
+.book-back {
+  align-self: flex-start;
+  border: none;
+  background: none;
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 0.82rem;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: -0.3rem;
+}
+.book-back:hover { color: var(--ink); text-decoration: underline; }
+
+/* Kotak maklumat akaun deposit + nota */
+.deposit-box {
+  border: 1px dashed var(--line);
+  border-radius: 10px;
+  padding: 0.85rem 1rem;
+  font-size: 0.88rem;
+  text-align: center;
+}
+.deposit-box-title { margin: 0 0 0.3rem; color: var(--muted); font-size: 0.8rem; }
+.deposit-acc { margin: 0; line-height: 1.5; }
+.deposit-box img {
+  width: 180px;
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0.7rem auto 0.4rem;
+  border-radius: 8px;
+}
+.deposit-receipt { margin: 0.4rem 0 0; color: var(--muted); font-size: 0.78rem; }
+.deposit-eventnote {
+  margin: -0.3rem 0 0;
+  color: var(--accent);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
 
 /* Modal menu penuh */
 .modal-menu {
