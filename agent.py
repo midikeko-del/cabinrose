@@ -52,7 +52,7 @@ SUMMARY_FILE = ROOT / "state" / "last-run.txt"
 
 NOTIS_WIDTH = 1080     # flyer popup - lebih besar untuk teks tajam
 
-MAX_BATCH = 5          # hanya 5 gambar terbaru diproses setiap minggu
+MAX_BATCH = 6          # maks gambar diproses setiap larian publish (harian)
 MAX_WIDTH = 900        # sama dengan resipi galeri sedia ada (towebp.php)
 BLUR_REJECT = 30.0     # varians Laplacian bawah ini = kabur teruk -> tolak
 BLUR_SHARPEN = 100.0   # bawah ini = kabur sikit -> tajamkan dahulu
