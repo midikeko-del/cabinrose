@@ -240,10 +240,15 @@ def handle_notis(cmd: str, msg: dict, token: str, chat_id: str) -> bool:
     return True
 
 
-def process_message(msg: dict, token: str, chat_id: str) -> str:
+def process_message(msg: dict, token: str, chat_id: str,
+                    notify: bool = False) -> str:
     """Proses SATU mesej Telegram - dikongsi oleh mode_fetch (polling) dan
     mode_webhook (push serta-merta). Arahan /notis dikendali terus; selainnya
-    gambar disimpan ke incoming/ untuk larian publish. Pulang label log ringkas."""
+    gambar disimpan ke incoming/ untuk larian publish. Pulang label log ringkas.
+
+    notify=True (laluan webhook) hantar ringkasan giliran incoming/ ke Telegram
+    serta-merta selepas gambar galeri disimpan. Dibiar False untuk polling fetch
+    supaya larian backlog jaring-keselamatan tak membanjiri group."""
     if str(msg.get("chat", {}).get("id", "")) != str(chat_id):
         return "abai (chat lain)"
 
@@ -268,6 +273,8 @@ def process_message(msg: dict, token: str, chat_id: str) -> str:
     if not content:
         return f"AMARAN: gagal muat turun {uniq} - dilangkau"
     dest.write_bytes(content)
+    if notify:
+        notify_incoming_queue(token, chat_id, dest.name)
     return f"disimpan {dest.name} ({len(content) / 1024:.0f}KB)"
 
 
@@ -331,7 +338,7 @@ def mode_webhook() -> None:
         msg = json.loads(raw)
     except json.JSONDecodeError as e:
         sys.exit(f"RALAT: TELEGRAM_MESSAGE bukan JSON sah: {e}")
-    print(f"webhook: {process_message(msg, token, chat_id)}")
+    print(f"webhook: {process_message(msg, token, chat_id, notify=True)}")
 
 
 # ---------------------------------------------------------- Computer vision --
@@ -401,6 +408,77 @@ def enhance(img: Image.Image, needs_sharpen: bool) -> Image.Image:
     img = ImageEnhance.Contrast(img).enhance(1.06)
     img = ImageEnhance.Brightness(img).enhance(1.01)
     return img
+
+
+# ------------------------------------------------------ Preview / notifikasi --
+
+def analyze_incoming(manifest: dict) -> list[tuple[str, str, str]]:
+    """Preview (read-only) keputusan publish untuk gambar dalam incoming/,
+    guna peraturan SAMA dengan mode_publish: hanya MAX_BATCH terbaru dipertimbang,
+    tolak kabur (< BLUR_REJECT), skip duplikat (dHash <= DUP_DISTANCE lawan galeri
+    sedia ada + gambar terdahulu dalam batch). TIDAK mengubah/memadam apa-apa fail.
+    Pulang [(nama, verdikt, detail)] verdikt: publish|duplicate|blur|ignored.
+
+    Nota: ini anggaran pada masa gambar tiba - larian publish sebenar (00:00 MYT)
+    boleh beza jika lebih gambar masuk kemudian."""
+    files = sorted(INCOMING.glob("*.jpg"), key=lambda p: p.name, reverse=True) \
+        if INCOMING.is_dir() else []
+    batch, ignored = files[:MAX_BATCH], files[MAX_BATCH:]
+
+    known_hashes: list[int] = []
+    for entry in manifest.get("images", []):
+        p = ROOT / entry["src"]
+        if p.exists():
+            try:
+                with Image.open(p) as im:
+                    known_hashes.append(dhash(im))
+            except OSError:
+                pass
+
+    out: list[tuple[str, str, str]] = []
+    for path in batch:
+        try:
+            img = Image.open(io.BytesIO(path.read_bytes()))
+            img.load()
+        except OSError:
+            out.append((path.name, "blur", "fail rosak"))
+            continue
+        score = blur_score(img)
+        if score < BLUR_REJECT:
+            out.append((path.name, "blur", f"kabur (skor {score:.0f})"))
+            continue
+        h = dhash(img)
+        if any(hamming(h, k) <= DUP_DISTANCE for k in known_hashes):
+            out.append((path.name, "duplicate", "hampir sama dgn gambar sedia ada"))
+            continue
+        known_hashes.append(h)
+        out.append((path.name, "publish", f"unik (skor {score:.0f})"))
+    for path in ignored:
+        out.append((path.name, "ignored", f"melebihi {MAX_BATCH} terbaru"))
+    return out
+
+
+def notify_incoming_queue(token: str, chat_id: str, just_saved: str) -> None:
+    """Hantar ringkasan giliran incoming/ ke Telegram serta-merta selepas gambar
+    galeri ditangkap (laluan webhook). Beritahu owner gambar mana yang MASUK
+    giliran dan (anggaran) mana yang akan terbit vs di-skip. Gagal senyap -
+    notifikasi tak sepatutnya menggagalkan penangkapan gambar."""
+    try:
+        manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
+        rows = analyze_incoming(manifest)
+    except (OSError, ValueError) as e:
+        print(f"AMARAN: notifikasi giliran gagal ({e}) - dilangkau")
+        return
+    icon = {"publish": "✅", "duplicate": "⏭️", "blur": "❌", "ignored": "⏸️"}
+    n_pub = sum(1 for _, v, _ in rows if v == "publish")
+    lines = [f"📸 Gambar diterima & masuk giliran galeri: {just_saved}",
+             f"Giliran sekarang: {len(rows)} gambar · {n_pub} akan terbit (anggaran):"]
+    for name, verdict, detail in rows:
+        tag = "  ⬅️ baru" if name == just_saved else ""
+        lines.append(f"{icon.get(verdict, '•')} {name} — {detail}{tag}")
+    lines.append("\nTerbit ke galeri automatik pada ~00:00 MYT (larian publish "
+                 "harian). Nak buang mana-mana sebelum itu, cakap je.")
+    tg_send(token, chat_id, "\n".join(lines))
 
 
 # ------------------------------------------------------------------ Publish --

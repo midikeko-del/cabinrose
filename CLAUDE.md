@@ -182,7 +182,12 @@ dengan **tiga pencetus** — mod dipilih ikut `github.event_name`/`schedule`:
   telegram-update`) dengan mesej dalam `client_payload.message` (dihantar ke
   ejen sebagai env `TELEGRAM_MESSAGE`). `process_message` proses SATU mesej:
   `/notis` → popup terus; gambar → `incoming/`. Popup naik ~1 minit, tak tunggu
-  jadual. Pasang: lihat `worker/SETUP.md` (perlu GitHub PAT + akaun Cloudflare,
+  jadual. Gambar galeri yang ditangkap juga picu ringkasan Telegram serta-merta
+  (`notify_incoming_queue` → `analyze_incoming`): senarai giliran `incoming/` +
+  anggaran mana akan terbit/duplikat/kabur, guna peraturan sama macam publish
+  (read-only, tak ubah fail). Hanya laluan webhook (`notify=True`); fetch polling
+  senyap supaya larian backlog tak membanjiri group.
+  Pasang: lihat `worker/SETUP.md` (perlu GitHub PAT + akaun Cloudflare,
   kedua-dua percuma). **Webhook & getUpdates saling eksklusif di Telegram** —
   sebab itu fetch di bawah kini jaring keselamatan sahaja.
 - **fetch (harian 15:00 UTC, jaring keselamatan)** — `python agent.py fetch`
