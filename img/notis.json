@@ -1,4 +1,10 @@
 {
   "comment": "Notis/promosi popup - JANGAN edit index.html terus; fail ini dikemas kini oleh agent.py (arahan Telegram /notis) dan dijana ke HTML oleh tools/build-notis.php. 'active' = null bermakna tiada notis. Medan active: src (webp flyer), w/h, expiry (YYYY-MM-DD, notis auto-hilang selepas tarikh ini), added.",
-  "active": null
+  "active": {
+    "src": "img/notis/notis-20260719-AQAD1xdrG8sD4VZ-.webp",
+    "w": 1024,
+    "h": 1280,
+    "expiry": "2026-07-30",
+    "added": "2026-07-19"
+  }
 }
