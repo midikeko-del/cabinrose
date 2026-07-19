@@ -1,12 +1,20 @@
-# Ejen galeri automatik (agent.py) - satu workflow, dua jadual:
+# Ejen galeri + notis automatik (agent.py) - satu workflow, dua jadual:
 #
 #   fetch  (HARIAN 01:00 MYT)  - kutip gambar baru dari group Telegram ke
-#          incoming/. Harian kerana Telegram getUpdates hanya simpan ~24 jam.
+#          incoming/. Turut kendali arahan /notis dan /notis off SERTA-MERTA
+#          (bukan tunggu larian mingguan - notis/promosi perlu segera).
+#          Harian kerana Telegram getUpdates hanya simpan ~24 jam.
 #   publish (MINGGUAN Ahad 00:00 MYT) - 5 gambar terbaru ditapis computer
 #          vision (kabur/duplikat/auto-center - percuma, tiada API berbayar),
-#          masuk depan galeri (FIFO had 30), HTML dijana semula, push
-#          (GitHub Pages auto-deploy), notifikasi ke group Telegram.
-#          incoming/ kosong -> skip senyap, tiada notifikasi.
+#          masuk depan galeri (FIFO had 30). incoming/ kosong -> skip senyap.
+#
+# build-notis.php dijalankan pada KEDUA-DUA jadual (bukan setakat bila /notis
+# diterima) supaya notis yang tamat tempoh turut tergugur secara automatik
+# dalam masa <=1 hari tanpa sebarang arahan Telegram - build ini semak
+# expiry >= hari-ini setiap kali dijalankan.
+#
+# Notifikasi /notis dihantar TERUS oleh agent.py (tg_send dalam handle_notis)
+# sebaik arahan diterima - bukan langkah berasingan dalam workflow ini.
 #
 # PHP di sini jalan MASA BUILD sahaja (jana index.html + en/index.html
 # statik) - GitHub Pages hanya menghidang fail statik itu.
@@ -68,17 +76,20 @@ jobs:
         run: python agent.py ${{ steps.mode.outputs.mode }}
 
       - name: Pasang PHP (untuk jana HTML statik)
-        if: steps.mode.outputs.mode == 'publish'
         uses: shivammathur/setup-php@v2
         with:
           php-version: "8.3"
           extensions: gd
 
-      - name: Jana semula HTML galeri (BM + EN)
+      - name: Jana semula galeri (mingguan sahaja)
         if: steps.mode.outputs.mode == 'publish'
-        run: |
-          php tools/build-gallery.php
-          php tools/build-en.php
+        run: php tools/build-gallery.php
+
+      - name: Jana semula popup notis (setiap larian - kuatkuasa auto-tamat)
+        run: php tools/build-notis.php
+
+      - name: Jana semula /en/
+        run: php tools/build-en.php
 
       - name: Commit & push (jika ada perubahan)
         id: commit

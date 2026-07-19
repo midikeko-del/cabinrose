@@ -67,6 +67,8 @@ $attrText = [
     'Buka menu navigasi'        => 'Open navigation menu',
     'Peta lokasi Cabin Rose Station' => 'Cabin Rose Station location map',
     'aria-label="Tutup"'        => 'aria-label="Close"',
+    'Notis dan promosi terkini Cabin Rose Station'
+        => 'Latest notice and promotion from Cabin Rose Station',
 ];
 
 // Alt galeri daripada manifest (lihat tools/build-gallery.php).

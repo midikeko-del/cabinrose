@@ -197,6 +197,38 @@ dengan dua jadual — mod dipilih ikut `github.event.schedule`:
 - Alt text automasi adalah generik; boleh diperelok manual dalam
   `img/gallery.json` bila-bila masa (jalankan semula build-gallery + build-en).
 
+## Notis/promosi popup Telegram (`/notis`)
+
+Owner hantar **gambar flyer** dalam group Telegram dengan caption:
+
+```
+/notis 30/7/2026
+```
+
+- Tarikh (terima `D/M/YY`, `D/M/YYYY`, pemisah `/`, `-`, atau `.`) ialah
+  tarikh **tamat** — popup hilang automatik selepas itu, owner tak perlu
+  buat apa-apa. `/notis off` buang serta-merta sebelum tamat.
+- Dikendali dalam `mode_fetch` (bukan `mode_publish`) — **serta-merta**,
+  tak tunggu larian mingguan, sebab caption dikesan dalam larian **fetch
+  harian** yang sama yang mengutip gambar galeri. Flyer TIDAK melalui
+  penapisan CV galeri (kabur/duplikat/auto-center) — ia grafik reka bentuk
+  sengaja, bukan calon galeri.
+- Bot balas TERUS ke group (bukan tunggu notifikasi workflow):
+  kejayaan, atau amaran kalau `/notis` tanpa gambar / tanpa tarikh /
+  tarikh tak sah / tarikh dah lepas.
+- Sumber tunggal: `img/notis.json` (medan `active`, `null` = tiada notis).
+  `tools/build-notis.php` menyuntik/mengosongkan blok popup dalam
+  `index.html` antara `<!-- AUTO-NOTIS:START/END -->`, kemudian **WAJIB**
+  `build-en.php`. Skrip ini dijalankan pada **kedua-dua** jadual (fetch +
+  publish) — sebab itu notis tamat tempoh tergugur automatik dalam masa
+  ≤1 hari walaupun tiada arahan Telegram baru (semakan `expiry >= hari-ini`
+  berlaku setiap kali dijalankan).
+- Popup dipaparkan **setiap kali laman dimuat** (bukan sekali per pelawat —
+  tiada localStorage, atas permintaan owner), butang tutup besar di bucu.
+  Imej flyer papar **penuh tanpa dipotong** (bukan cover-crop macam galeri).
+- Kalau notis tak sesuai terlanjur naik: `/notis off` dari Telegram (segera,
+  tak perlu tunggu deploy), atau `git revert` commit berkaitan.
+
 ## Struktur
 
 ```
@@ -207,12 +239,15 @@ js/main.js              i18n, nav, reveal, modal menu, borang tempahan
 img/                    *.jpg/png = master · *.webp = dihidangkan
 img/gallery.json        Manifest galeri (susunan, alt, pos) — sumber tunggal
 img/auto/               Imej galeri dari automasi Telegram
+img/notis.json          Manifest popup notis/promosi aktif — sumber tunggal
+img/notis/              Flyer notis dari arahan Telegram /notis
 incoming/               Gambar Telegram menunggu penerbitan mingguan
 state/                  Offset Telegram + ringkasan larian automasi
-agent.py                Ejen galeri: fetch Telegram + penapisan CV + manifest
+agent.py                Ejen: fetch Telegram + penapisan CV + notis + manifest
 requirements.txt        Dependencies Python untuk agent.py
 tools/build-en.php      Jana en/index.html
 tools/build-gallery.php Jana blok galeri daripada gallery.json
+tools/build-notis.php   Jana/kosongkan popup notis daripada notis.json
 tools/towebp.php        Jana WebP + og-image
 .github/workflows/      weekly-agent.yml (fetch harian + publish mingguan)
 sitemap.xml             Kedua-dua URL + alternates hreflang

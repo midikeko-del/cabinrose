@@ -4,3 +4,5 @@ fix_password.php
 # OS temporary files
 .DS_Store
 Thumbs.db
+*.pyc
+__pycache__/

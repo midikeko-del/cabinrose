@@ -570,4 +570,27 @@
       closeBooking();
     });
   }
+
+  /* ---------- Popup notis/promosi ---------- */
+  // Blok disuntik oleh tools/build-notis.php (kosong bila tiada notis aktif).
+  // Popup dipapar SETIAP muat halaman (tiada localStorage - permintaan owner);
+  // butang pangkah besar memudahkan tutup. Semakan expiry sisi pelayar di sini
+  // ialah belt-and-suspenders: kalau build statik basi (notis tamat tapi HTML
+  // belum dijana semula), popup tetap tak dipapar.
+  var notis = document.getElementById("notisPopup");
+  if (notis) {
+    var expiry = notis.getAttribute("data-expiry") || "";
+    var today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD tempatan
+    if (expiry === "" || expiry >= today) {
+      notis.hidden = false;
+      var closeNotis = function () { notis.hidden = true; };
+      notis.querySelector("#notisClose").addEventListener("click", closeNotis);
+      notis.addEventListener("click", function (e) {
+        if (e.target === notis) closeNotis(); // klik latar
+      });
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && !notis.hidden) closeNotis();
+      });
+    }
+  }
 })();

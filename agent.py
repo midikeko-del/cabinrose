@@ -45,8 +45,12 @@ ROOT = Path(__file__).resolve().parent
 INCOMING = ROOT / "incoming"
 AUTO_DIR = ROOT / "img" / "auto"
 MANIFEST = ROOT / "img" / "gallery.json"
+NOTIS_DIR = ROOT / "img" / "notis"
+NOTIS_MANIFEST = ROOT / "img" / "notis.json"
 OFFSET_FILE = ROOT / "state" / "telegram-offset.txt"
 SUMMARY_FILE = ROOT / "state" / "last-run.txt"
+
+NOTIS_WIDTH = 1080     # flyer popup - lebih besar untuk teks tajam
 
 MAX_BATCH = 5          # hanya 5 gambar terbaru diproses setiap minggu
 MAX_WIDTH = 900        # sama dengan resipi galeri sedia ada (towebp.php)
@@ -106,6 +110,128 @@ def tg_call(token: str, method: str, **params):
     return data["result"]
 
 
+def tg_send(token: str, chat_id: str, text: str) -> None:
+    """Hantar mesej balas ke group (maklum balas /notis). Gagal senyap."""
+    try:
+        requests.get(
+            f"https://api.telegram.org/bot{token}/sendMessage",
+            params={"chat_id": chat_id, "text": text}, timeout=30,
+        )
+    except requests.RequestException:
+        pass
+
+
+def download_photo(token: str, photo: dict) -> bytes | None:
+    file_info = tg_call(token, "getFile", file_id=photo["file_id"])
+    r = requests.get(
+        f"https://api.telegram.org/file/bot{token}/{file_info['file_path']}",
+        timeout=120,
+    )
+    return r.content if r.status_code == 200 and r.content else None
+
+
+# --------------------------------------------------------------------- Notis --
+
+def parse_notis_date(token: str) -> str | None:
+    """'30/7/26' | '30-07-2026' | '30.7.2026' -> '2026-07-30' (ISO), atau None."""
+    m = re.match(r"^(\d{1,2})[/.\-](\d{1,2})[/.\-](\d{2,4})$", token.strip())
+    if not m:
+        return None
+    d, mo, y = int(m.group(1)), int(m.group(2)), int(m.group(3))
+    if y < 100:
+        y += 2000
+    try:
+        return datetime(y, mo, d).strftime("%Y-%m-%d")
+    except ValueError:
+        return None
+
+
+def write_notis_active(entry: dict | None) -> None:
+    """Kemas kini medan 'active' notis.json (kekalkan komen)."""
+    manifest = json.loads(NOTIS_MANIFEST.read_text(encoding="utf-8"))
+    manifest["active"] = entry
+    NOTIS_MANIFEST.write_text(
+        json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
+
+
+def process_notis(jpeg_bytes: bytes, expiry_iso: str, uniq: str) -> dict:
+    """Simpan flyer (master jpg + webp) & tulis notis.json. TIADA sharpen -
+    flyer ialah grafik reka, penajaman merosakkan teks. Pulang entri."""
+    NOTIS_DIR.mkdir(parents=True, exist_ok=True)
+    img = Image.open(io.BytesIO(jpeg_bytes))
+    img.load()
+    img = img.convert("RGB")
+    if img.width > NOTIS_WIDTH:
+        ratio = NOTIS_WIDTH / img.width
+        img = img.resize((NOTIS_WIDTH, round(img.height * ratio)), Image.LANCZOS)
+    base = f"notis-{datetime.now(timezone.utc).strftime('%Y%m%d')}-{uniq}"
+    img.save(NOTIS_DIR / f"{base}.jpg", quality=JPG_QUALITY)   # master
+    img.save(NOTIS_DIR / f"{base}.webp", quality=WEBP_QUALITY)  # dihidangkan
+    entry = {
+        "src": f"img/notis/{base}.webp",
+        "w": img.width, "h": img.height,
+        "expiry": expiry_iso,
+        "added": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
+    }
+    write_notis_active(entry)
+    return entry
+
+
+def handle_notis(cmd: str, msg: dict, token: str, chat_id: str) -> bool:
+    """Kendali arahan /notis (dalam caption gambar atau teks). Balas maklum
+    balas ke group. Pulang True jika notis.json berubah (perlu build+deploy)."""
+    rest = cmd[len("/notis"):].strip()
+    photo = msg["photo"][-1] if msg.get("photo") else None
+    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+
+    if rest.lower() == "off":
+        write_notis_active(None)
+        tg_send(token, chat_id, "✅ Notis dibuang dari laman.")
+        print("NOTIS: dibuang (/notis off)")
+        return True
+
+    if not photo:
+        tg_send(token, chat_id,
+                "⚠️ /notis perlukan gambar flyer dilampirkan sekali. Hantar "
+                "semula gambar + caption, cth: /notis 30/7/2026")
+        print("NOTIS: ditolak - tiada gambar")
+        return False
+
+    if not rest:
+        tg_send(token, chat_id,
+                "⚠️ /notis perlukan tarikh tamat. Cth: /notis 30/7/2026")
+        print("NOTIS: ditolak - tiada tarikh")
+        return False
+
+    expiry = parse_notis_date(rest)
+    if expiry is None:
+        tg_send(token, chat_id,
+                f"⚠️ Tarikh '{rest}' tak sah. Guna hari/bulan/tahun, "
+                "cth: /notis 30/7/2026")
+        print(f"NOTIS: ditolak - tarikh tak sah '{rest}'")
+        return False
+    if expiry < today:
+        tg_send(token, chat_id,
+                f"⚠️ Tarikh {rest} dah lepas. Guna tarikh akan datang.")
+        print(f"NOTIS: ditolak - tarikh lepas {expiry}")
+        return False
+
+    content = download_photo(token, photo)
+    if not content:
+        tg_send(token, chat_id, "⚠️ Gagal muat turun gambar flyer. Cuba lagi.")
+        print("NOTIS: ditolak - muat turun gagal")
+        return False
+
+    uniq = re.sub(r"[^A-Za-z0-9_-]", "", photo["file_unique_id"])
+    process_notis(content, expiry, uniq)
+    tg_send(token, chat_id,
+            f"✅ Notis dipasang di laman, akan tamat {expiry[8:10]}/{expiry[5:7]}/"
+            f"{expiry[0:4]}. Guna /notis off untuk buang lebih awal.")
+    print(f"NOTIS: dipasang, tamat {expiry}")
+    return True
+
+
 def mode_fetch() -> None:
     import os
 
@@ -129,6 +255,15 @@ def mode_fetch() -> None:
         msg = u.get("message") or {}
         if str(msg.get("chat", {}).get("id", "")) != str(chat_id):
             continue
+
+        # Teks (caption gambar atau mesej biasa) yang bermula /notis - dikendali
+        # berasingan daripada aliran galeri, tak kira ada gambar atau tidak
+        # (handle_notis sendiri balas ralat kalau gambar tiada/tarikh tak sah).
+        text = (msg.get("caption") or msg.get("text") or "").strip()
+        if text.lower().startswith("/notis"):
+            handle_notis(text, msg, token, chat_id)
+            continue
+
         if not msg.get("photo"):
             continue
         photo = msg["photo"][-1]  # saiz terbesar
@@ -137,17 +272,13 @@ def mode_fetch() -> None:
         dest = INCOMING / f"tg-{date}-{uniq}.jpg"
         if dest.exists():  # dedup harian
             continue
-        file_info = tg_call(token, "getFile", file_id=photo["file_id"])
-        r = requests.get(
-            f"https://api.telegram.org/file/bot{token}/{file_info['file_path']}",
-            timeout=120,
-        )
-        if r.status_code != 200 or not r.content:
+        content = download_photo(token, photo)
+        if not content:
             print(f"AMARAN: gagal muat turun {uniq} - dilangkau")
             continue
-        dest.write_bytes(r.content)
+        dest.write_bytes(content)
         saved += 1
-        print(f"disimpan: {dest.name} ({len(r.content) / 1024:.0f}KB)")
+        print(f"disimpan: {dest.name} ({len(content) / 1024:.0f}KB)")
 
     OFFSET_FILE.write_text(f"{max_id}\n")
     print(f"selesai: {len(updates)} update disemak, {saved} gambar baru, offset={max_id}")

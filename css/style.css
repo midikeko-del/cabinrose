@@ -825,6 +825,43 @@ a:hover { text-decoration: underline; text-underline-offset: 3px; }
   font-weight: 600;
 }
 
+/* Popup notis/promosi (flyer penuh - object-fit tak diperlukan kerana imej
+   berdiri sendiri; max-width/height mengecilkan supaya sentiasa penuh). */
+.notis-popup { z-index: 130; }        /* atas semua modal lain */
+.notis-card {
+  position: relative;
+  max-width: min(92vw, 540px);
+  display: flex;
+}
+.notis-card img {
+  display: block;
+  max-width: 100%;
+  max-height: 86vh;
+  width: auto;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+}
+.notis-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 46px;
+  height: 46px;
+  border-radius: 999px;
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  background: rgba(15, 15, 15, 0.72);
+  color: #fff;
+  font-size: 1.4rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  transition: transform .15s ease, background .2s ease;
+}
+.notis-close:hover { transform: scale(1.08); background: rgba(15, 15, 15, 0.9); }
+
 /* Modal menu penuh */
 .modal-menu {
   max-width: 720px;
