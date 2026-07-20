@@ -259,6 +259,41 @@ Owner hantar **gambar flyer** dalam group Telegram dengan caption:
   — hanya satu notis aktif pada satu masa, jadi tiada sebab simpan flyer
   yatim dalam repo.
 
+## Kad "Yang wajib cuba" Telegram (`/wajibcuba`)
+
+Owner tukar mana-mana **4 kad bento** di seksyen "Yang wajib cuba" (imej +
+nama + deskripsi) dengan hantar **gambar hidangan** + caption:
+
+```
+/wajibcuba 2 | Nasi Buttermilk | Buttermilk Rice | Ayam crispy sos buttermilk | Crispy chicken in buttermilk sauce
+```
+
+- Format: `/wajibcuba <1-4> | nama BM | nama EN | desc BM | desc EN` — 4 medan
+  teks WAJIB, dipisah `|`. Tag/badge pilihan: tambah `| tag BM | tag EN` di
+  hujung (biasanya slot 1 sahaja, cth "Paling laris"). Tag DIKEKALKAN jika tak
+  diberi — untuk buang, hantar dua medan tag kosong.
+- **Slot 1** = panel besar bergambar penuh (imej ialah `<img class=cell-feature-bg>`,
+  bukan latar CSS lagi — sebab itu boleh ditukar dari manifest). **Slot 4** =
+  kad lebar. Slot 2-3 = kad biasa.
+- Dikendali dalam `handle_wajibcuba` (`agent.py`), **serta-merta** dalam larian
+  webhook (gambar `/wajibcuba` TIDAK masuk `incoming/`/galeri). Bot balas ke
+  group: kejayaan, atau ralat spesifik (slot bukan 1-4 / medan teks kurang /
+  tiada gambar / muat turun gagal).
+- Sumber tunggal: `img/wajibcuba.json` (array `items`, 4 slot). Foto diproses
+  (lebar 1000px, unsharp halus + kontras — resipi foto galeri) ke
+  `img/wajibcuba/slot<N>-<uniq>.{jpg,webp}`. `write_wajibcuba_slot` padam imej
+  slot LAMA — **tapi hanya jika dalam `img/wajibcuba/`**, supaya master galeri
+  kongsi (imej awal spt `img/corndog.webp`) tak terpadam.
+- **Dwibahasa**: `tools/render-wajibcuba.php` (fungsi kongsi) jana blok BM
+  (`build-wajibcuba.php` → `index.html`) DAN EN (`build-en.php` → `en/index.html`)
+  dari manifest yang **sama** — jadi `/en/` sentiasa padan. Blok ini **tiada
+  data-i18n** (teks EN datang dari manifest, bukan kamus `js/main.js`). Antara
+  penanda `<!-- AUTO-WAJIBCUBA:START/END -->` — jangan sunting manual.
+- `build-wajibcuba.php` dijalankan pada **setiap** larian workflow (self-heal,
+  idempotent), kemudian **WAJIB** `build-en.php`.
+- Kalau kad tak sesuai terlanjur naik: hantar `/wajibcuba <slot>` baru, atau
+  `git revert` commit berkaitan.
+
 ## Struktur
 
 ```
@@ -271,6 +306,8 @@ img/gallery.json        Manifest galeri (susunan, alt, pos) — sumber tunggal
 img/auto/               Imej galeri dari automasi Telegram
 img/notis.json          Manifest popup notis/promosi aktif — sumber tunggal
 img/notis/              Flyer notis dari arahan Telegram /notis
+img/wajibcuba.json      Manifest 4 kad "Yang wajib cuba" — sumber tunggal
+img/wajibcuba/          Foto kad dari arahan Telegram /wajibcuba
 incoming/               Gambar Telegram menunggu penerbitan harian
 state/                  Offset Telegram + ringkasan larian automasi
 agent.py                Ejen: webhook/fetch Telegram + penapisan CV + notis + manifest
@@ -279,6 +316,8 @@ worker/                 Cloudflare Worker webhook Telegram + panduan (SETUP.md)
 tools/build-en.php      Jana en/index.html
 tools/build-gallery.php Jana blok galeri daripada gallery.json
 tools/build-notis.php   Jana/kosongkan popup notis daripada notis.json
+tools/build-wajibcuba.php Jana kad "Yang wajib cuba" (BM) daripada wajibcuba.json
+tools/render-wajibcuba.php Fungsi render kongsi (BM+EN) untuk kad wajib cuba
 tools/towebp.php        Jana WebP + og-image
 .github/workflows/      weekly-agent.yml (webhook + fetch harian + publish harian)
 sitemap.xml             Kedua-dua URL + alternates hreflang
@@ -292,6 +331,8 @@ google40ff…html         Verifikasi Search Console — jangan padam
 1. Ubah `index.html` / `js/main.js`?  → `php tools/build-en.php`
 2. Ubah galeri?                       → edit `img/gallery.json` →
    `php tools/build-gallery.php` → `php tools/build-en.php`
+2b. Ubah kad "wajib cuba"?           → edit `img/wajibcuba.json` →
+   `php tools/build-wajibcuba.php` → `php tools/build-en.php`
 3. Tambah atau ganti imej?           → `php tools/towebp.php`
 4. Tambah URL baru?                  → kemas kini `sitemap.xml` + hreflang
 5. Uji **kedua-dua** `/` dan `/en/`

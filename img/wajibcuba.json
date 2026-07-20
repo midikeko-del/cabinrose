@@ -1,0 +1,53 @@
+{
+  "comment": "Kad 'Yang wajib cuba' (bento 4 sel) - JANGAN edit index.html terus. Fail ini SUMBER TUNGGAL, dikemas kini oleh agent.py (arahan Telegram /wajibcuba) dan dijana ke HTML oleh tools/build-wajibcuba.php (BM) + tools/build-en.php (EN). Setiap item: slot 1-4, img (webp dihidangkan), w/h, nama/desc BM & EN, tag pilihan (badge - biasanya sel 1 sahaja). Slot 1 = panel besar bergambar penuh; slot 4 = kad lebar. Imej awal berkongsi master galeri (img/*.webp); imej dari Telegram disimpan ke img/wajibcuba/.",
+  "items": [
+    {
+      "slot": 1,
+      "img": "img/corndog.webp",
+      "w": 800,
+      "h": 800,
+      "tagMs": "Paling laris",
+      "tagEn": "Best seller",
+      "nameMs": "Corndog Signature",
+      "nameEn": "Signature Corndog",
+      "descMs": "Rangup di luar, cheese melt di dalam. Sebab utama orang datang semula.",
+      "descEn": "Crispy outside, molten cheese inside. The reason people keep coming back."
+    },
+    {
+      "slot": 2,
+      "img": "img/buttermilk.webp",
+      "w": 1200,
+      "h": 896,
+      "tagMs": "",
+      "tagEn": "",
+      "nameMs": "Nasi Buttermilk",
+      "nameEn": "Buttermilk Rice",
+      "descMs": "Ayam crispy bersalut sos buttermilk yang lemak dan manis.",
+      "descEn": "Crispy chicken coated in a rich, creamy buttermilk sauce."
+    },
+    {
+      "slot": 3,
+      "img": "img/chicken_chop.webp",
+      "w": 1200,
+      "h": 896,
+      "tagMs": "",
+      "tagEn": "",
+      "nameMs": "Chicken Chop & Grill",
+      "nameEn": "Chicken Chop & Grill",
+      "descMs": "Western klasik, dimasak segar dengan sos homemade.",
+      "descEn": "Western classics, cooked fresh with homemade sauce."
+    },
+    {
+      "slot": 4,
+      "img": "img/drinks.webp",
+      "w": 896,
+      "h": 1200,
+      "tagMs": "",
+      "tagEn": "",
+      "nameMs": "Kopi & Dessert",
+      "nameEn": "Coffee & Dessert",
+      "descMs": "Kopi pekat dan pencuci mulut untuk sesi lepak petang.",
+      "descEn": "Good coffee and desserts for slow evenings."
+    }
+  ]
+}

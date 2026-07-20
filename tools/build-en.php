@@ -48,6 +48,26 @@ $html = preg_replace_callback(
     $html
 );
 
+/* ---------- 2b. Bina semula blok "Yang wajib cuba" dalam EN ---------- */
+// Blok ini TIDAK guna data-i18n (tiada dalam kamus) - ia dijana dari
+// img/wajibcuba.json, sumber SAMA seperti versi BM (tools/build-wajibcuba.php).
+// Kita ganti blok BM yang disalin dari index.html dengan render EN. Laluan
+// img/ dalam blok ini ditukar ke ../img/ oleh langkah 5 di bawah.
+require_once __DIR__ . "/render-wajibcuba.php";
+$wc = json_decode(file_get_contents("$root/img/wajibcuba.json"), true);
+if ($wc === null || !isset($wc["items"])) {
+    fwrite(STDERR, "AMARAN: img/wajibcuba.json tidak sah - blok wajibcuba /en/ tak dijana\n");
+} else {
+    $wcBlok = render_wajibcuba_block($wc["items"], "en");
+    $wcPattern = '/(<!-- AUTO-WAJIBCUBA:START -->).*?(<!-- AUTO-WAJIBCUBA:END -->)/s';
+    if (!preg_match($wcPattern, $html)) {
+        fwrite(STDERR, "AMARAN: penanda AUTO-WAJIBCUBA tidak dijumpai\n");
+    }
+    $html = preg_replace_callback($wcPattern, function ($m) use ($wcBlok) {
+        return $m[1] . "\r\n" . $wcBlok . "\r\n      " . $m[2];
+    }, $html);
+}
+
 /* ---------- 3. Teks dalam atribut (alt / aria-label / title) ---------- */
 // Tidak boleh diambil dari kamus kerana ia bukan kandungan elemen.
 // Alt galeri TIDAK lagi disenaraikan di sini - ia datang dari img/gallery.json

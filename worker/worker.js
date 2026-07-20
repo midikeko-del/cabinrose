@@ -38,12 +38,14 @@ export default {
 
     const msg = update.message || update.channel_post;
     if (msg) {
-      const text = (msg.caption || msg.text || "").trim().toLowerCase();
-      const isNotis = text.startsWith("/notis");
+      const text = (msg.caption || msg.text || "").trim();
+      const isCommand = text.startsWith("/");
       const hasPhoto = Array.isArray(msg.photo) && msg.photo.length > 0;
-      // Hanya cetus untuk /notis atau gambar. Chatter teks biasa dalam group
-      // diabaikan supaya tak membazir larian GitHub Actions.
-      if (isNotis || hasPhoto) {
+      // Cetus untuk apa-apa arahan slash (/notis, /wajibcuba, ...) atau gambar.
+      // Chatter teks biasa dalam group diabaikan supaya tak membazir larian
+      // GitHub Actions. (Arahan bergambar spt /wajibcuba diliputi hasPhoto
+      // juga, tapi generalisasi ini future-proof arahan teks-sahaja nanti.)
+      if (isCommand || hasPhoto) {
         await triggerGitHub(env, msg);
       }
     }

@@ -105,6 +105,9 @@ jobs:
       - name: Jana semula popup notis (setiap larian - kuatkuasa auto-tamat)
         run: php tools/build-notis.php
 
+      - name: Jana semula kad "Yang wajib cuba" (setiap larian - self-heal)
+        run: php tools/build-wajibcuba.php
+
       - name: Jana semula /en/
         run: php tools/build-en.php
 

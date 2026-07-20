@@ -47,10 +47,13 @@ AUTO_DIR = ROOT / "img" / "auto"
 MANIFEST = ROOT / "img" / "gallery.json"
 NOTIS_DIR = ROOT / "img" / "notis"
 NOTIS_MANIFEST = ROOT / "img" / "notis.json"
+WAJIBCUBA_DIR = ROOT / "img" / "wajibcuba"
+WAJIBCUBA_MANIFEST = ROOT / "img" / "wajibcuba.json"
 OFFSET_FILE = ROOT / "state" / "telegram-offset.txt"
 SUMMARY_FILE = ROOT / "state" / "last-run.txt"
 
 NOTIS_WIDTH = 1080     # flyer popup - lebih besar untuk teks tajam
+WAJIBCUBA_WIDTH = 1000  # kad menu "wajib cuba" - foto hidangan
 
 MAX_BATCH = 6          # maks gambar diproses setiap larian publish (harian)
 MAX_WIDTH = 900        # sama dengan resipi galeri sedia ada (towebp.php)
@@ -240,6 +243,113 @@ def handle_notis(cmd: str, msg: dict, token: str, chat_id: str) -> bool:
     return True
 
 
+# --------------------------------------------------------------- Wajib cuba --
+
+def parse_wajibcuba(cmd: str) -> tuple[int | None, dict | None, str | None]:
+    """Hurai caption /wajibcuba. Format (medan dipisah '|'):
+      /wajibcuba <1-4> | nama BM | nama EN | desc BM | desc EN [ | tag BM | tag EN ]
+    Pulang (slot, fields, err). fields ada nameMs/nameEn/descMs/descEn, dan
+    tagMs/tagEn HANYA jika kedua-duanya diberi (jika tidak, tag sedia ada kekal).
+    err = mesej ralat BM atau None."""
+    rest = cmd[len("/wajibcuba"):].strip()
+    parts = [p.strip() for p in rest.split("|")]
+    m = re.match(r"^(\d+)", parts[0])
+    if not m:
+        return None, None, "perlukan nombor slot 1-4 selepas /wajibcuba"
+    slot = int(m.group(1))
+    if not 1 <= slot <= 4:
+        return None, None, f"slot mesti 1-4 (dapat {slot})"
+    f = parts[1:]
+    if len(f) < 4 or any(x == "" for x in f[:4]):
+        return None, None, ("perlukan 4 medan teks: nama BM | nama EN | "
+                            "desc BM | desc EN")
+    fields = {"nameMs": f[0], "nameEn": f[1], "descMs": f[2], "descEn": f[3]}
+    if len(f) >= 6 and f[4] != "" and f[5] != "":
+        fields["tagMs"] = f[4]
+        fields["tagEn"] = f[5]
+    return slot, fields, None
+
+
+def process_wajibcuba(jpeg_bytes: bytes, slot: int, uniq: str) -> tuple[str, int, int]:
+    """Simpan foto kad (master jpg + webp) guna resipi foto galeri (tajam
+    halus + kontras sikit). Pulang (laluan webp relatif, w, h)."""
+    WAJIBCUBA_DIR.mkdir(parents=True, exist_ok=True)
+    img = Image.open(io.BytesIO(jpeg_bytes))
+    img.load()
+    img = img.convert("RGB")
+    if img.width > WAJIBCUBA_WIDTH:
+        ratio = WAJIBCUBA_WIDTH / img.width
+        img = img.resize((WAJIBCUBA_WIDTH, round(img.height * ratio)), Image.LANCZOS)
+    img = img.filter(ImageFilter.UnsharpMask(radius=1.5, percent=60, threshold=3))
+    img = ImageEnhance.Contrast(img).enhance(1.06)
+    img = ImageEnhance.Brightness(img).enhance(1.01)
+    base = f"slot{slot}-{uniq}"
+    img.save(WAJIBCUBA_DIR / f"{base}.jpg", quality=JPG_QUALITY)   # master
+    img.save(WAJIBCUBA_DIR / f"{base}.webp", quality=WEBP_QUALITY)  # dihidangkan
+    return f"img/wajibcuba/{base}.webp", img.width, img.height
+
+
+def write_wajibcuba_slot(slot: int, fields: dict, img_rel: str,
+                         w: int, h: int) -> None:
+    """Kemas kini satu slot dalam wajibcuba.json. Padam imej lama HANYA jika ia
+    dalam img/wajibcuba/ (elak padam master galeri kongsi spt img/corndog.webp
+    yang jadi imej awal). Medan tag dikekalkan jika fields tak mengandunginya."""
+    manifest = json.loads(WAJIBCUBA_MANIFEST.read_text(encoding="utf-8"))
+    items = manifest.get("items", [])
+    target = next((it for it in items if int(it.get("slot", 0)) == slot), None)
+    if target is None:
+        target = {"slot": slot}
+        items.append(target)
+
+    old = target.get("img", "")
+    if old.startswith("img/wajibcuba/") and old != img_rel:
+        old_path = ROOT / old
+        for fpath in (old_path, old_path.with_suffix(".jpg")):
+            if fpath.exists():
+                fpath.unlink()
+
+    target.update(fields)  # nama/desc (+ tag jika ada); tag lama kekal jika tiada
+    target.update({"img": img_rel, "w": w, "h": h})
+    items.sort(key=lambda it: int(it.get("slot", 0)))
+    manifest["items"] = items
+    WAJIBCUBA_MANIFEST.write_text(
+        json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
+
+
+def handle_wajibcuba(cmd: str, msg: dict, token: str, chat_id: str) -> bool:
+    """Kendali /wajibcuba (caption gambar). Tukar imej + nama + desc satu kad
+    'Yang wajib cuba'. Balas maklum balas ke group. Pulang True jika berubah."""
+    photo = msg["photo"][-1] if msg.get("photo") else None
+    slot, fields, err = parse_wajibcuba(cmd)
+    if err:
+        tg_send(token, chat_id,
+                "⚠️ /wajibcuba: " + err + "\nContoh:\n/wajibcuba 2 | Nasi "
+                "Buttermilk | Buttermilk Rice | Ayam crispy sos buttermilk | "
+                "Crispy chicken in buttermilk sauce")
+        print(f"WAJIBCUBA: ditolak - {err}")
+        return False
+    if not photo:
+        tg_send(token, chat_id,
+                "⚠️ /wajibcuba perlukan gambar hidangan dilampirkan sekali.")
+        print("WAJIBCUBA: ditolak - tiada gambar")
+        return False
+
+    content = download_photo(token, photo)
+    if not content:
+        tg_send(token, chat_id, "⚠️ Gagal muat turun gambar. Cuba lagi.")
+        print("WAJIBCUBA: ditolak - muat turun gagal")
+        return False
+
+    uniq = re.sub(r"[^A-Za-z0-9_-]", "", photo["file_unique_id"])
+    img_rel, w, h = process_wajibcuba(content, slot, uniq)
+    write_wajibcuba_slot(slot, fields, img_rel, w, h)
+    tg_send(token, chat_id,
+            f"✅ Kad 'Yang wajib cuba' #{slot} dikemas kini: {fields['nameMs']}.")
+    print(f"WAJIBCUBA: slot {slot} dikemas kini -> {img_rel}")
+    return True
+
+
 def process_message(msg: dict, token: str, chat_id: str,
                     notify: bool = False) -> str:
     """Proses SATU mesej Telegram - dikongsi oleh mode_fetch (polling) dan
@@ -259,6 +369,12 @@ def process_message(msg: dict, token: str, chat_id: str,
     if text.lower().startswith("/notis"):
         handle_notis(text, msg, token, chat_id)
         return "notis dikendali"
+
+    # /wajibcuba: tukar satu kad "Yang wajib cuba" (imej+teks). Dikendali di
+    # sini (bukan aliran galeri) supaya gambarnya tak masuk incoming/.
+    if text.lower().startswith("/wajibcuba"):
+        handle_wajibcuba(text, msg, token, chat_id)
+        return "wajibcuba dikendali"
 
     if not msg.get("photo"):
         return "abai (bukan gambar)"
