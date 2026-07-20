@@ -28,7 +28,7 @@ $dir = dirname(__DIR__) . "/img";
  * kedua-duanya "drinks.webp" dan yang kecil menimpa yang besar.
  */
 $jobs = [
-    "hero_food.jpg"    => [null, 82, "hero_food.webp"],   // latar hero, elemen LCP
+    "hero_food.jpg"    => [null, 74, "hero_food.webp"],   // latar hero, elemen LCP (tertutup kecerunan gelap, kualiti rendah tak ketara)
     // Sel bento maks ~570px lebar dan bertutup kecerunan gelap + teks,
     // jadi kualiti lebih rendah tidak ketara di sini.
     "corndog.jpg"      => [800, 72, "corndog.webp"],
